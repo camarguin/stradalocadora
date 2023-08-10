@@ -1,4 +1,5 @@
 'use client'
+import { Menubar } from '@/components/Menubar'
 import theme from '@/styles/theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
@@ -10,7 +11,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <ChakraProvider theme={theme}>{children}</ChakraProvider>
+        <ChakraProvider theme={theme}>
+          <Menubar />
+          {children}
+        </ChakraProvider>
         <FloatingWhatsApp
           avatar='./avatar.jpeg'
           phoneNumber='5534998392344'

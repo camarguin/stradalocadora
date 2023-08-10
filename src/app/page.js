@@ -1,5 +1,8 @@
 import { CardCar } from '@/components/CardCar'
+import { CardsContainer } from '@/components/CardsContainer'
 import { Footer } from '@/components/Footer'
+import { Hero } from '@/components/Hero'
+import { Menubar } from '@/components/Menubar'
 
 const cars = [
   { name: 'car 1', km: '53000', price: '139992', year: '19/20' },
@@ -11,10 +14,10 @@ const cars = [
 
 export default function Home() {
   return (
-    <div>
-      home page
-      <CardCar car={cars[1]} />
+    <>
+      <Hero />
+      <CardsContainer cars={cars} />
       <Footer />
-    </div>
+    </>
   )
 }

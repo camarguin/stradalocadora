@@ -28,7 +28,7 @@ export const Menubar = () => {
     <Box>
       <HStack
         justifyContent='space-between'
-        padding='10px 20px'
+        p={{ '2xl': '10px 200px', lg: '10px 50px', md: '10px 20px', sm: '10px 20px' }}
         color='myBlue.300'
         alignItems='center'
         spacing={4}
@@ -100,7 +100,7 @@ export const Menubar = () => {
         background='myBlue.200'
         color='white'
         py={{ base: 4 }}
-        px={{ base: 4 }}
+        px={{ '2xl': '180px', xl: '20px' }}
         borderStyle='solid'
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align='center'

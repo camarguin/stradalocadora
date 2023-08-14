@@ -24,9 +24,9 @@ export const CardCar = ({ car }) => {
 
   return (
     <Flex
-      p={50}
+      // p={50}
       w='full'
-      minWidth='400px'
+      // minWidth='350px'
       alignItems='center'
       justifyContent='center'
     >

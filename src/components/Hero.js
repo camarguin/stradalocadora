@@ -72,7 +72,16 @@ export const Hero = () => {
         >
           Carros de qualidade para venda e aluguel
         </Text>
-        <Button marginTop='50px'>Explore nossa frota</Button>
+        <Button
+          marginTop='50px'
+          color='white'
+          bg='myGreen.300'
+          _hover={{
+            bg: 'myGreen.200',
+          }}
+        >
+          Explore nossa frota
+        </Button>
       </Box>
       <Box
         clipPath='polygon(0 0, 100% 0, 100% 100%, 35% 100%)'

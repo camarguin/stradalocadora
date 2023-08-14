@@ -1,8 +1,10 @@
+'use client'
 import { CardCar } from '@/components/CardCar'
 import { CardsContainer } from '@/components/CardsContainer'
 import { Footer } from '@/components/Footer'
 import { Hero } from '@/components/Hero'
 import { Menubar } from '@/components/Menubar'
+import { Flex, Heading, Text } from '@chakra-ui/react'
 
 const cars = [
   { name: 'car 1', km: '53000', price: '139992', year: '19/20' },
@@ -16,7 +18,16 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <CardsContainer cars={cars} />
+      <Flex
+        direction='column'
+        padding={'20px 20px'}
+      >
+        <Heading>| Veículos em destaque</Heading>
+        <Text>Veículos a venda</Text>
+        <CardsContainer cars={cars} />
+        <Text>Veículos para alugar</Text>
+        <CardsContainer cars={cars} />
+      </Flex>
       <Footer />
     </>
   )

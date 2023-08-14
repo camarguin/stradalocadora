@@ -11,13 +11,30 @@ export const CardsContainer = ({ cars }) => {
   return (
     <Flex align='center'>
       <Swiper
-        slidesPerView={4}
         spaceBetween={10}
         pagination={{
           clickable: true,
         }}
         modules={[Pagination]}
         className='mySwiper'
+        breakpoints={{
+          // When window width is >= 320px
+          320: {
+            slidesPerView: 1,
+          },
+          // When window width is >= 480px
+          480: {
+            slidesPerView: 2,
+          },
+          // When window width is >= 768px
+          861: {
+            slidesPerView: 3,
+          },
+          // When window width is >= 1024px
+          1440: {
+            slidesPerView: 4,
+          },
+        }}
       >
         {cars.map((car, index) => (
           <SwiperSlide key={index}>
@@ -26,7 +43,7 @@ export const CardsContainer = ({ cars }) => {
         ))}
       </Swiper>
       <Center
-        w='400px'
+        w={{ xl: '400px', lg: '400px', md: '200px', sm: '50px' }}
         textAlign='center'
       >
         <Button margin='0px 10px'>Explorar mais</Button>

@@ -91,14 +91,7 @@ export const Hero = () => {
         backgroundPosition='center'
         width='100%'
         height='100%'
-      >
-        {/* <Image
-          src={backgroundImageUrl}
-          width={1920}
-          height={1280}
-          alt='Garagem'
-        /> */}
-      </Box>
+      ></Box>
     </HStack>
   )
 }

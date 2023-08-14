@@ -50,7 +50,7 @@ export const CardCar = ({ car }) => {
           />
         </Box>
         <VStack p='6'>
-          <Heading size='md'>Car 1</Heading>
+          <Heading size='md'>{car.name}</Heading>
           <HStack spacing={4}>
             <Stack
               direction='row'

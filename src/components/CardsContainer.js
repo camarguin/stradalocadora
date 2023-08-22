@@ -46,7 +46,12 @@ export const CardsContainer = ({ cars }) => {
         w={{ xl: '400px', lg: '400px', md: '200px', sm: '50px' }}
         textAlign='center'
       >
-        <Button margin='0px 10px'>Explorar mais</Button>
+        <Button
+          margin='10px'
+          variant='outline'
+        >
+          Explorar mais
+        </Button>
       </Center>
     </Flex>
   )

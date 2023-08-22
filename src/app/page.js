@@ -1,4 +1,5 @@
 'use client'
+import { About } from '@/components/About'
 import { CardCar } from '@/components/CardCar'
 import { CardsContainer } from '@/components/CardsContainer'
 import { Footer } from '@/components/Footer'
@@ -20,14 +21,32 @@ export default function Home() {
       <Hero />
       <Flex
         direction='column'
-        padding={'20px 20px'}
+        padding='50px 20px'
       >
-        <Heading>| Veículos em destaque</Heading>
-        <Text>Veículos a venda</Text>
+        <Heading
+          color='myBlue.200'
+          padding='30px'
+        >
+          | Veículos em destaque
+        </Heading>
+        <Text
+          padding='20px 30px'
+          fontSize='xl'
+          color='myBlue.200'
+        >
+          Veículos a venda
+        </Text>
         <CardsContainer cars={cars} />
-        <Text>Veículos para alugar</Text>
+        <Text
+          padding='20px 30px'
+          fontSize='xl'
+          color='myBlue.200'
+        >
+          Veículos para alugar
+        </Text>
         <CardsContainer cars={cars} />
       </Flex>
+      <About />
       <Footer />
     </>
   )

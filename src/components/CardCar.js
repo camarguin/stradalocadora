@@ -24,9 +24,7 @@ export const CardCar = ({ car }) => {
 
   return (
     <Flex
-      // p={50}
       w='full'
-      // minWidth='350px'
       alignItems='center'
       justifyContent='center'
     >
@@ -49,7 +47,7 @@ export const CardCar = ({ car }) => {
             height={200}
           />
         </Box>
-        <VStack p='6'>
+        <VStack p='40px 0px'>
           <Heading size='md'>{car.name}</Heading>
           <HStack spacing={4}>
             <Stack
@@ -76,7 +74,12 @@ export const CardCar = ({ car }) => {
             </Stack>
           </HStack>
           <Text>{formattedPrice}</Text>
-          <Button marginTop='20px'>Tenho interesse</Button>
+          <Button
+            variant='outline'
+            marginTop='20px'
+          >
+            Tenho interesse
+          </Button>
         </VStack>
       </Box>
     </Flex>

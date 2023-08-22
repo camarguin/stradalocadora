@@ -84,7 +84,6 @@ export const Menubar = () => {
           as='a'
           display={{ base: 'none', md: 'inline-flex' }}
           fontSize={'sm'}
-          fontWeight={600}
           color='white'
           bg='myGreen.300'
           href='tel:+1234567890'

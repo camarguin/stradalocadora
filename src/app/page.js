@@ -47,7 +47,6 @@ export default function Home() {
         <CardsContainer cars={cars} />
       </Flex>
       <About />
-      <Footer />
     </>
   )
 }

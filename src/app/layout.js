@@ -1,5 +1,6 @@
 'use client'
 import { AdminMenuBar } from '@/components/AdminMenuBar'
+import { Footer } from '@/components/Footer'
 import { Menubar } from '@/components/Menubar'
 import theme from '@/styles/theme'
 import { ChakraProvider } from '@chakra-ui/react'
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
         <ChakraProvider theme={theme}>
           {isAdminPath.includes('/admin') ? <AdminMenuBar /> : <Menubar />}
           {children}
+          {isAdminPath.includes('/admin') ? null : <Footer />}
         </ChakraProvider>
         <FloatingWhatsApp
           avatar='./avatar.jpeg'

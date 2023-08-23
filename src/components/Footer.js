@@ -2,8 +2,9 @@
 import React from 'react'
 import { Box, Container, Divider, HStack, SimpleGrid, Stack, Text, useColorModeValue } from '@chakra-ui/react'
 import Image from 'next/image'
-import { Roboto_Condensed } from 'next/font/google'
 import Link from 'next/link'
+import { Roboto_Condensed } from 'next/font/google'
+import { AiOutlineInstagram } from 'react-icons/ai'
 
 const robotoCondensed = Roboto_Condensed({ subsets: ['latin'], weight: '400' })
 
@@ -39,53 +40,26 @@ export const Footer = () => {
           </Stack>
           <Stack align={'flex-start'}>
             <Text>Ir para</Text>
-            <Link href='/'>Carros para alugar</Link>
-            <Link href='/'>Carros a venda</Link>
-            <Box
-              as='a'
-              href={'#'}
-            >
-              Sobre nós
-            </Box>
+            <Link href='/alugar'>Carros para alugar</Link>
+            <Link href='/comprar'>Carros a venda</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <Text>Nossos telefones</Text>
+            <Text>(34) 99839-2344</Text>
+            <Text>(34) 99856-2344</Text>
           </Stack>
           <Stack align={'flex-start'}>
             <Text>Nosso email</Text>
-            <Box
-              as='a'
-              href={'#'}
-            >
-              Help Center
-            </Box>
-            <Box
-              as='a'
-              href={'#'}
-            >
-              Terms of Service
-            </Box>
-            <Box
-              as='a'
-              href={'#'}
-            >
-              Legal
-            </Box>
-            <Box
-              as='a'
-              href={'#'}
-            >
-              Privacy Policy
-            </Box>
-            <Box
-              as='a'
-              href={'#'}
-            >
-              Status
-            </Box>
+            <a href='mailto:financeiro@stradalocadora.com.br'>financeiro@stradalocadora.com.br</a>
           </Stack>
           <Stack align={'flex-start'}>
             <Text>Fique por dentro</Text>
+            <a
+              href='https://www.instagram.com/stradagaragem/'
+              target='_blank'
+            >
+              <AiOutlineInstagram fontSize='25px' />
+            </a>
           </Stack>
         </SimpleGrid>
       </Container>

@@ -13,7 +13,7 @@ const cars = [
 export default function comprar() {
   return (
     <Flex
-      p={{ '2xl': '0 100px', xl: '0 50px' }}
+      p={{ '2xl': '50px 100px', xl: '50px 50px' }}
       justify='center'
     >
       <Grid

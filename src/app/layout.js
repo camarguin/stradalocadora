@@ -1,18 +1,23 @@
 'use client'
+import { AdminMenuBar } from '@/components/AdminMenuBar'
 import { Menubar } from '@/components/Menubar'
 import theme from '@/styles/theme'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
+import { usePathname } from 'next/navigation'
 import { FloatingWhatsApp } from 'react-floating-whatsapp'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({ children }) {
+  // Check if the current route contains "/admin"
+  const isAdminPath = usePathname()
+
   return (
     <html lang='en'>
       <body className={inter.className}>
         <ChakraProvider theme={theme}>
-          <Menubar />
+          {isAdminPath.includes('/admin') ? <AdminMenuBar /> : <Menubar />}
           {children}
         </ChakraProvider>
         <FloatingWhatsApp

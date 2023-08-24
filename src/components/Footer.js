@@ -27,7 +27,7 @@ export const Footer = () => {
           <Stack spacing={6}>
             <Box>
               <Image
-                src='/StradaVeiculosLogo.png'
+                src='/WhiteLogo.png'
                 width={100}
                 height={80}
                 alt='Strada Locadora logo'

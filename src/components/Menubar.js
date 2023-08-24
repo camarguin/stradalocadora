@@ -13,8 +13,9 @@ import {
   Heading,
   useDisclosure,
   HStack,
+  useMediaQuery,
 } from '@chakra-ui/react'
-import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon, PhoneIcon } from '@chakra-ui/icons'
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import { BsTelephone, BsPinMap, BsWhatsapp } from 'react-icons/bs'
 import { BiTimeFive } from 'react-icons/bi'
 import Image from 'next/image'
@@ -22,78 +23,81 @@ import Link from 'next/link'
 
 export const Menubar = () => {
   const { isOpen, onToggle } = useDisclosure()
+  const [isMobile] = useMediaQuery('(min-width: 768px)')
 
   return (
     <Box>
-      <HStack
-        justifyContent='space-between'
-        p={{ '2xl': '10px 50px', xl: '10px 50px', lg: '10px 40px', md: '10px 20px', sm: '10px 20px' }}
-        color='myBlue.300'
-        alignItems='center'
-        spacing={4}
-      >
-        <Link href='/'>
-          <Image
-            src='/StradaVeiculosLogo.png'
-            alt='Strada Veiculos Logo'
-            width={105}
-            height={58}
-          />
-        </Link>
-
-        <Flex alignItems='center'>
-          <BsPinMap size='2rem' />
-          <Box padding='0px 10px'>
-            <Heading
-              size='sm'
-              color='#1D3973'
-            >
-              Uberlândia
-            </Heading>
-            <Text>Av. Platina, 295, Dona Zulmira</Text>
-          </Box>
-        </Flex>
-
-        <Flex alignItems='center'>
-          <BiTimeFive size='2rem' />
-          <Box padding='0px 10px'>
-            <Heading
-              size='sm'
-              color='#1D3973'
-            >
-              Segunda a Sábado
-            </Heading>
-            <Text>8:00 às 18:00 / 8:00 às 12:00 (Sábado)</Text>
-          </Box>
-        </Flex>
-
-        <Flex alignItems='center'>
-          <BsWhatsapp size='2rem' />
-          <Box padding='0px 10px'>
-            <Heading
-              size='sm'
-              color='#1D3973'
-            >
-              Whatsapp
-            </Heading>
-            <Text>(34) 99839 - 2344 / (34) 99856 - 2344</Text>
-          </Box>
-        </Flex>
-        <Button
-          leftIcon={<BsTelephone />}
-          as='a'
-          display={{ base: 'none', md: 'inline-flex' }}
-          fontSize={'sm'}
-          color='white'
-          bg='myGreen.300'
-          href='tel:+1234567890'
-          _hover={{
-            bg: 'myGreen.200',
-          }}
+      {isMobile ? (
+        <HStack
+          justifyContent='space-between'
+          p={{ '2xl': '10px 50px', xl: '10px 50px', lg: '10px 40px', md: '10px 20px', sm: '10px 20px' }}
+          color='myBlue.300'
+          alignItems='center'
+          spacing={4}
         >
-          Ligue agora
-        </Button>
-      </HStack>
+          <Link href='/'>
+            <Image
+              src='/BlackLogo.png'
+              alt='Strada Veiculos Logo'
+              width={105}
+              height={58}
+            />
+          </Link>
+
+          <Flex alignItems='center'>
+            <BsPinMap size='2rem' />
+            <Box padding='0px 10px'>
+              <Heading
+                size='sm'
+                color='#1D3973'
+              >
+                Uberlândia
+              </Heading>
+              <Text>Av. Platina, 295, Dona Zulmira</Text>
+            </Box>
+          </Flex>
+
+          <Flex alignItems='center'>
+            <BiTimeFive size='2rem' />
+            <Box padding='0px 10px'>
+              <Heading
+                size='sm'
+                color='#1D3973'
+              >
+                Segunda a Sábado
+              </Heading>
+              <Text>8:00 às 18:00 / 8:00 às 12:00 (Sábado)</Text>
+            </Box>
+          </Flex>
+
+          <Flex alignItems='center'>
+            <BsWhatsapp size='2rem' />
+            <Box padding='0px 10px'>
+              <Heading
+                size='sm'
+                color='#1D3973'
+              >
+                Whatsapp
+              </Heading>
+              <Text>(34) 99839 - 2344 / (34) 99856 - 2344</Text>
+            </Box>
+          </Flex>
+          <Button
+            leftIcon={<BsTelephone />}
+            as='a'
+            display={{ base: 'none', md: 'inline-flex' }}
+            fontSize={'sm'}
+            color='white'
+            bg='myGreen.300'
+            href='tel:+1234567890'
+            _hover={{
+              bg: 'myGreen.200',
+            }}
+          >
+            Ligue agora
+          </Button>
+        </HStack>
+      ) : null}
       <Flex
         background='myBlue.200'
         color='white'
@@ -127,6 +131,16 @@ export const Menubar = () => {
             variant={'ghost'}
             aria-label={'Toggle Navigation'}
           />
+          <Box alignSelf='center'>
+            <Link href='/'>
+              <Image
+                src='/WhiteLogo.png'
+                alt='Strada Veiculos Logo'
+                width={105}
+                height={58}
+              />
+            </Link>
+          </Box>
         </Flex>
         <Flex
           flex={{ base: 1 }}
@@ -139,13 +153,6 @@ export const Menubar = () => {
             <DesktopNav />
           </Flex>
         </Flex>
-
-        {/* <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={'flex-end'}
-          direction={'row'}
-          spacing={6}
-        ></Stack> */}
       </Flex>
       <Collapse
         in={isOpen}

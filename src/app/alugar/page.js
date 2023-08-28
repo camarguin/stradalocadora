@@ -14,7 +14,6 @@ const cars = [
 export default function alugar() {
   return (
     <Flex
-      // p={{ '2xl': '30px 60px', xl: '30px 50px', lg: '30px 40px', md: '30px 30px', sm: '20px 20px', base: '20px 20px' }}
       maxW={'7xl'}
       margin='0 auto'
       py={10}

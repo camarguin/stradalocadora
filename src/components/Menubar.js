@@ -31,7 +31,7 @@ export const Menubar = () => {
         <HStack
           justifyContent='space-between'
           p={{ '2xl': '10px 50px', xl: '10px 50px', lg: '10px 40px', md: '10px 20px', sm: '10px 20px' }}
-          maxW='1440px'
+          maxW='1920px'
           margin='0 auto'
           color='myBlue.300'
           alignItems='center'
@@ -144,8 +144,8 @@ export const Menubar = () => {
           </Box>
         </Flex>
         <HStack
-          p={{ '2xl': '0px 260px', xl: '0px 50px', lg: '0px 40px', md: '0px 20px', sm: '0px 20px' }}
-          maxW='1440px'
+          p={{ '2xl': '0px 50px', xl: '0px 50px', lg: '0px 40px', md: '0px 20px', sm: '0px 20px' }}
+          maxW='1920px'
           width='100%'
           spacing={4}
           flex={{ base: 1 }}

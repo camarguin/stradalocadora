@@ -1,6 +1,6 @@
 'use client'
 import { CardCar } from '@/components/CardCar'
-import { Flex, Grid, GridItem } from '@chakra-ui/react'
+import { Flex, Grid, GridItem, Heading } from '@chakra-ui/react'
 import React from 'react'
 const cars = [
   { name: 'car 1', km: '53000', price: '139992', year: '19/20' },
@@ -13,9 +13,19 @@ const cars = [
 export default function comprar() {
   return (
     <Flex
-      p={{ '2xl': '50px 100px', xl: '50px 50px' }}
+      // p={{ '2xl': '30px 60px', xl: '30px 50px', lg: '30px 40px', md: '30px 30px', sm: '20px 20px', base: '20px 20px' }}
+      maxW={'7xl'}
+      margin='0 auto'
+      py={10}
       justify='center'
+      direction='column'
     >
+      <Heading
+        color='myBlue.200'
+        paddingBottom='30px'
+      >
+        | Veículos para comprar
+      </Heading>
       <Grid
         templateColumns={{
           xl: 'repeat(4, 1fr)',

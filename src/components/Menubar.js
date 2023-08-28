@@ -31,6 +31,8 @@ export const Menubar = () => {
         <HStack
           justifyContent='space-between'
           p={{ '2xl': '10px 50px', xl: '10px 50px', lg: '10px 40px', md: '10px 20px', sm: '10px 20px' }}
+          maxW='1440px'
+          margin='0 auto'
           color='myBlue.300'
           alignItems='center'
           spacing={4}
@@ -98,14 +100,13 @@ export const Menubar = () => {
           </Button>
         </HStack>
       ) : null}
-      <Flex
+      <HStack
         background='myBlue.200'
         color='white'
         py={{ base: 4 }}
-        px={{ '2xl': '40px', xl: '20px' }}
         borderStyle='solid'
         borderColor={useColorModeValue('gray.200', 'gray.900')}
-        align='center'
+        alignItems='center'
       >
         <Flex
           flex={{ base: 1, md: 'auto' }}
@@ -142,18 +143,19 @@ export const Menubar = () => {
             </Link>
           </Box>
         </Flex>
-        <Flex
+        <HStack
+          p={{ '2xl': '0px 260px', xl: '0px 50px', lg: '0px 40px', md: '0px 20px', sm: '0px 20px' }}
+          maxW='1440px'
+          width='100%'
+          spacing={4}
           flex={{ base: 1 }}
           justify={{ base: 'center', md: 'start' }}
         >
-          <Flex
-            display={{ base: 'none', md: 'flex' }}
-            ml={10}
-          >
+          <Flex display={{ base: 'none', md: 'flex' }}>
             <DesktopNav />
           </Flex>
-        </Flex>
-      </Flex>
+        </HStack>
+      </HStack>
       <Collapse
         in={isOpen}
         animateOpacity

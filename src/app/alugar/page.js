@@ -14,17 +14,18 @@ const cars = [
 export default function alugar() {
   return (
     <Flex
-      p={{ '2xl': '30px 30px', xl: '30px 50px', lg: '30px 40px', md: '30px 30px', sm: '20px 20px', base: '20px 20px' }}
+      // p={{ '2xl': '30px 60px', xl: '30px 50px', lg: '30px 40px', md: '30px 30px', sm: '20px 20px', base: '20px 20px' }}
+      maxW={'7xl'}
+      margin='0 auto'
+      py={10}
       justify='center'
       direction='column'
     >
       <Heading
         color='myBlue.200'
-        // p={{ '2xl': '50px 40px', xl: '50px 0px', lg: '50px 0px', md: '50px 0px' }}
-
         paddingBottom='30px'
       >
-        | Veículos a venda
+        | Veículos para alugar
       </Heading>
       <Grid
         templateColumns={{

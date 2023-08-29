@@ -1,18 +1,17 @@
-import { Box, Flex, HStack, Heading, Text } from '@chakra-ui/react'
+import { Box, Flex, HStack, Heading, Text, VStack } from '@chakra-ui/react'
 import Image from 'next/image'
 import React from 'react'
+import { Stats } from './Stats'
 
 export const About = () => {
   return (
     <HStack
       maxH='100vh'
       height='700px'
+      alignItems='center'
     >
       <Box
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        flex='60%'
+        flex='50%'
         clipPath='polygon(0 0, 65% 0, 100% 100%, 0 100%)'
         bg="url('/aboutImgBackground.jpeg')"
         backgroundSize='cover'
@@ -21,10 +20,13 @@ export const About = () => {
         height='100%'
       ></Box>
 
-      <Box flex='40%'>
+      <Box
+        flex='50%'
+        // background='red'
+      >
         <Heading
           color='myBlue.200'
-          padding='30px'
+          padding='30px 0px'
         >
           | Sobre Nós
         </Heading>
@@ -32,9 +34,16 @@ export const About = () => {
           fontSize='md'
           fontWeight={500}
           color='myBlue.200'
+          paddingRight='100px'
         >
-          Carros de qualidade para venda e aluguel
+          Na Strada Locadora, somos mais do que apenas uma locadora de carros - somos seus parceiros automotivos
+          dedicados, comprometidos em proporcionar a você a melhor experiência de condução. Com paixão por carros e foco
+          na satisfação do cliente, nos estabelecemos como um destino líder tanto para a compra quanto para o aluguel de
+          veículos.
         </Text>
+        <Flex padding='50px 0px'>
+          <Stats />
+        </Flex>
       </Box>
     </HStack>
   )

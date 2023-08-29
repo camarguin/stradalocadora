@@ -262,12 +262,4 @@ const NAV_ITEMS = [
     label: 'Alugar',
     href: '/alugar',
   },
-  {
-    label: 'Sobre nós',
-    href: '#',
-  },
-  {
-    label: 'Contato',
-    href: '#',
-  },
 ]

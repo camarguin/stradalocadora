@@ -1,26 +1,18 @@
 'use client'
-import {
-  Flex,
-  Circle,
-  Box,
-  Badge,
-  useColorModeValue,
-  VStack,
-  HStack,
-  Text,
-  Heading,
-  Button,
-  Stack,
-  Icon,
-} from '@chakra-ui/react'
-import { BsCalendarRange, BsSpeedometer2 } from 'react-icons/bs'
-import Image from 'next/image'
-
 import React from 'react'
+import Image from 'next/image'
+import { Flex, Box, useColorModeValue, VStack, HStack, Text, Heading, Button, Stack, Icon } from '@chakra-ui/react'
+import { BsCalendarRange, BsSpeedometer2 } from 'react-icons/bs'
 
 export const CardCar = ({ car }) => {
   const formattedPrice = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(car.price)
   const formattedKm = Number(car.km).toLocaleString('pt-BR')
+
+  const autoMessage = `Olá, tenho interesse no veículo ${car.name}
+                      Ano: ${car.year}
+                      KM: ${car.km}
+                      Valor: ${car.price}
+  `
 
   return (
     <Flex
@@ -41,7 +33,7 @@ export const CardCar = ({ car }) => {
           overflow='hidden'
         >
           <Image
-            src='https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+            src='/ComingSoon.png'
             alt='Picture of the car'
             width={300}
             height={200}
@@ -77,6 +69,12 @@ export const CardCar = ({ car }) => {
           <Button
             variant='outline'
             marginTop='20px'
+            as='a'
+            // href={`https://wa.me/553498392344?text=Ol%C3%A1,%20tenho%20interesse%20no%20ve%C3%ADculo%20${encodeURI(
+            //   car.name
+            // )}%20-%20-%20Ano:${encodeURI(car.year) + ' - KM: '}`}
+            href={`https://wa.me/553498392344?text=${encodeURI(autoMessage)}`}
+            target='_blank'
           >
             Tenho interesse
           </Button>

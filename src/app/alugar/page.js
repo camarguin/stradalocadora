@@ -1,17 +1,31 @@
 'use client'
 import { CardCar } from '@/components/CardCar'
+import { useVehicles } from '@/hooks/useVehicles'
 import { Flex, Grid, Heading, Text } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-const cars = [
-  { name: 'car 1', km: '53000', price: '139992', year: '19/20' },
-  { name: 'car 2', km: '23000', price: '22000', year: '19/20' },
-  { name: 'car 3', km: '139900', price: '30000', year: '19/20' },
-  { name: 'car 4', km: '39900', price: '36000', year: '22/23' },
-  { name: 'car 5', km: '39900', price: '36000', year: '22/23' },
-]
+export default function Alugar() {
+  // const [rentalVehicles, setRentalVehicles] = useState([])
+  const { getRentalVehicles, vehicles } = useVehicles()
 
-export default function alugar() {
+  const fetchRentalVehicles = async () => {
+    try {
+      const rentalVehicles = await getRentalVehicles()
+      console.log('Fetched rental vehicles:', rentalVehicles)
+    } catch (error) {
+      console.error('Error fetching rental vehicles:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchRentalVehicles()
+    // setRentalVehicles(fetchRentalVehicles())
+  }, [])
+
+  useEffect(() => {
+    console.log(vehicles)
+  }, [vehicles])
+
   return (
     <Flex
       maxW={'7xl'}
@@ -35,13 +49,13 @@ export default function alugar() {
         }}
         gap={{ lg: 10, md: 8, sm: 2 }}
       >
-        <CardCar car={cars[0]} />
-        <CardCar car={cars[1]} />
-        <CardCar car={cars[2]} />
-        <CardCar car={cars[3]} />
-        <CardCar car={cars[3]} />
-        <CardCar car={cars[1]} />
-        <CardCar car={cars[0]} />
+        {/* <button onClick={() => console.log(vehicles)}>test</button> */}
+        {vehicles.map((vehicle) => (
+          <CardCar
+            key={vehicle.id}
+            car={vehicle}
+          />
+        ))}
       </Grid>
     </Flex>
   )

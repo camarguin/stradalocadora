@@ -1,5 +1,7 @@
 'use client'
 import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import {
   Box,
   Flex,
@@ -7,7 +9,6 @@ import {
   IconButton,
   Button,
   Stack,
-  VStack,
   Collapse,
   useColorModeValue,
   Heading,
@@ -18,8 +19,6 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import { BsTelephone, BsPinMap, BsWhatsapp } from 'react-icons/bs'
 import { BiTimeFive } from 'react-icons/bi'
-import Image from 'next/image'
-import Link from 'next/link'
 
 export const Menubar = () => {
   const { isOpen, onToggle } = useDisclosure()

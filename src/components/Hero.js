@@ -1,13 +1,11 @@
 'use client'
 import React from 'react'
-import { Box, Button, Flex, HStack, Heading, Icon, Text, VStack } from '@chakra-ui/react'
-import Image from 'next/image'
+import { Box, Button, Flex, HStack, Heading, Text } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const Hero = () => {
-  const backgroundImageUrl = '/heroImgBackground.jpeg'
   const heroHeight = `calc(100vh - 129px)`
 
   const underlineSVG = (

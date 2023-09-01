@@ -7,6 +7,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 import { FloatingWhatsApp } from 'react-floating-whatsapp'
+import Head from './head'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang='en'>
+      <Head />
       <body className={inter.className}>
         <ChakraProvider theme={theme}>
           {isAdminPath.includes('/admin') ? <AdminMenuBar /> : <Menubar />}

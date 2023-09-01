@@ -1,8 +1,8 @@
 'use client'
 import React from 'react'
-import { Box, Container, Divider, HStack, SimpleGrid, Stack, Text, useColorModeValue } from '@chakra-ui/react'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
+import { Box, Container, Divider, HStack, SimpleGrid, Stack, Text } from '@chakra-ui/react'
 import { Roboto_Condensed } from 'next/font/google'
 import { AiOutlineInstagram } from 'react-icons/ai'
 

@@ -1,10 +1,6 @@
 'use client'
-import { Box, Flex, SimpleGrid, Stat, StatLabel, StatNumber, Text, useColorModeValue } from '@chakra-ui/react'
-import { BsPerson } from 'react-icons/bs'
-import { FiServer } from 'react-icons/fi'
-import { GoLocation } from 'react-icons/go'
+import { Box, Flex, SimpleGrid, Stat, StatLabel, StatNumber } from '@chakra-ui/react'
 import { IoIosPeople } from 'react-icons/io'
-import { FaTruckPickup } from 'react-icons/fa'
 import { ImPriceTags } from 'react-icons/im'
 import { MdCarRental } from 'react-icons/md'
 

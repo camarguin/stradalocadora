@@ -18,22 +18,6 @@ import { collection, getDocs } from 'firebase/firestore'
 
 export default function CarrosAlugar() {
   const [data, setData] = useState([])
-  // useEffect(() => {
-  //   // Fetch data from Firestore
-  //   const fetchData = async () => {
-  //     try {
-  //       const snapshot = await db.collection('vehicles').get()
-  //       console.log(snapshot)
-  //       const newData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-  //       setData(newData)
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error)
-  //     }
-  //   }
-
-  //   fetchData()
-  //   console.log(data)
-  // }, [])
 
   useEffect(() => {
     const fetchData = async () => {

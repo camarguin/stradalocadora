@@ -52,6 +52,7 @@ export default function Alugar() {
         {/* <button onClick={() => console.log(vehicles)}>test</button> */}
         {vehicles.map((vehicle) => (
           <CardCar
+            isRent
             key={vehicle.id}
             car={vehicle}
           />

@@ -4,14 +4,14 @@ import Image from 'next/image'
 import { Flex, Box, useColorModeValue, VStack, HStack, Text, Heading, Button, Stack, Icon } from '@chakra-ui/react'
 import { BsCalendarRange, BsSpeedometer2 } from 'react-icons/bs'
 
-export const CardCar = ({ car }) => {
+export const CardCar = ({ car, isRent }) => {
   const formattedPrice = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(car.price)
   const formattedKm = Number(car.km).toLocaleString('pt-BR')
 
   const autoMessage = `Olá, tenho interesse no veículo ${car.name}
-                      Ano: ${car.year}
-                      KM: ${car.km}
-                      Valor: ${car.price}
+  ${car.year ? `Ano: ${car.year}` : ''}
+  ${car.km ? `KM: ${car.km}` : ''}
+  ${car.price ? `Valor: ${car.price}` : ''}
   `
 
   return (
@@ -41,38 +41,39 @@ export const CardCar = ({ car }) => {
         </Box>
         <VStack p='40px 0px'>
           <Heading size='md'>{car.name}</Heading>
-          <HStack spacing={4}>
-            <Stack
-              direction='row'
-              align='center'
-            >
-              <Icon
-                as={BsSpeedometer2}
-                color='myGreen.300'
-                boxSize={6}
-              />
-              <Text>{formattedKm} km</Text>
-            </Stack>
-            <Stack
-              direction='row'
-              align='center'
-            >
-              <Icon
-                as={BsCalendarRange}
-                color='myGreen.300'
-                boxSize={5}
-              />
-              <Text>{car.year}</Text>
-            </Stack>
-          </HStack>
-          <Text>{formattedPrice}</Text>
+          {isRent ? null : (
+            <>
+              <HStack spacing={4}>
+                <Stack
+                  direction='row'
+                  align='center'
+                >
+                  <Icon
+                    as={BsSpeedometer2}
+                    color='myGreen.300'
+                    boxSize={6}
+                  />
+                  <Text>{formattedKm} km</Text>
+                </Stack>
+                <Stack
+                  direction='row'
+                  align='center'
+                >
+                  <Icon
+                    as={BsCalendarRange}
+                    color='myGreen.300'
+                    boxSize={5}
+                  />
+                  <Text>{car.year}</Text>
+                </Stack>
+              </HStack>
+              <Text>{formattedPrice}</Text>
+            </>
+          )}
           <Button
             variant='outline'
             marginTop='20px'
             as='a'
-            // href={`https://wa.me/553498392344?text=Ol%C3%A1,%20tenho%20interesse%20no%20ve%C3%ADculo%20${encodeURI(
-            //   car.name
-            // )}%20-%20-%20Ano:${encodeURI(car.year) + ' - KM: '}`}
             href={`https://wa.me/553498392344?text=${encodeURI(autoMessage)}`}
             target='_blank'
           >

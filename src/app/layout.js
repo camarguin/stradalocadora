@@ -23,16 +23,16 @@ export default function RootLayout({ children }) {
           {isAdminPath.includes('/admin') ? <AdminMenuBar /> : <Menubar />}
           {children}
           {isAdminPath.includes('/admin') ? null : <Footer />}
-        </ChakraProvider>
-        <FloatingWhatsApp
-          avatar='./avatar.jpeg'
-          phoneNumber='5534998392344'
-          accountName='Strada Locadora'
-          chatMessage='Olá, o que podemos te ajudar?'
-          placeholder='Digite sua mensagem...'
-          statusMessage='Atendimento das 08:00 as 18:00
+          <FloatingWhatsApp
+            avatar='./avatar.jpeg'
+            phoneNumber='5534998392344'
+            accountName='Strada Locadora'
+            chatMessage='Olá, o que podemos te ajudar?'
+            placeholder='Digite sua mensagem...'
+            statusMessage='Atendimento das 08:00 as 18:00
           Segunda a Sexta'
-        />
+          />
+        </ChakraProvider>
       </body>
     </html>
   )

@@ -48,7 +48,7 @@ export const useVehicles = () => {
     const batch = writeBatch(db)
 
     vehiclesData.forEach((vehicleData) => {
-      const newVehicleRef = doc(saleCollection)
+      const newVehicleRef = doc(rentCollection)
       batch.set(newVehicleRef, vehicleData)
     })
 

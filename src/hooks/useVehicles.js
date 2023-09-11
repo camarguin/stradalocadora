@@ -1,5 +1,5 @@
 import { db } from '@/services/firebase'
-import { collection, doc, getDocs, setDoc, writeBatch } from 'firebase/firestore'
+import { collection, doc, getDocs, setDoc, query, writeBatch, where } from 'firebase/firestore'
 import { useState } from 'react'
 
 export const useVehicles = () => {
@@ -33,6 +33,58 @@ export const useVehicles = () => {
     }
   }
 
+  const getFeaturedSaleVehicles = async () => {
+    try {
+      const q = query(saleCollection, where('featured', '==', true))
+
+      const querySnapshot = await getDocs(q)
+
+      // Ensure that querySnapshot.docs is an array before mapping over it
+      const vehiclesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+
+      console.log(vehiclesData)
+      return vehiclesData
+    } catch (error) {
+      console.error('Error fetching featured vehicles:', error)
+      return error
+    }
+  }
+
+  const getFeaturedRentalVehicles = async () => {
+    try {
+      const q = query(rentCollection, where('featured', '==', true))
+
+      const querySnapshot = await getDocs(q)
+
+      const vehiclesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+
+      console.log(vehiclesData)
+      return vehiclesData
+    } catch (error) {
+      console.error('Error fetching featured vehicles:', error)
+      return error
+    }
+  }
+
+  // Update many
+  const updateAllVehicles = async (vehiclesData) => {
+    const query = collection(db, 'rent')
+    try {
+      const querySnapshot = await getDocs(query)
+      const batch = writeBatch(db)
+
+      querySnapshot.forEach((doc) => {
+        const docRef = doc.ref
+        batch.update(docRef, { featured: false })
+      })
+
+      await batch.commit()
+      console.log('Successfully updated documents with "featured: false"')
+    } catch (error) {
+      console.error('Error updating documents:', error)
+    }
+  }
+
   const addSaleVehicle = async ({ vehicleData }) => {
     try {
       const docRef = await addDoc(saleCollection, vehicleData)
@@ -44,6 +96,7 @@ export const useVehicles = () => {
     } catch (error) {}
   }
 
+  // Add many
   const addVehicles = async (vehiclesData) => {
     const batch = writeBatch(db)
 
@@ -67,6 +120,9 @@ export const useVehicles = () => {
     addSaleVehicle,
     getRentalVehicles,
     getSaleVehicles,
+    getFeaturedSaleVehicles,
+    getFeaturedRentalVehicles,
     addVehicles,
+    updateAllVehicles,
   }
 }

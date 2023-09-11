@@ -6,8 +6,9 @@ import { Pagination } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import { CardCar } from './CardCar'
+import Link from 'next/link'
 
-export const CardsContainer = ({ cars }) => {
+export const CardsContainer = ({ cars, linkTo }) => {
   return (
     <Flex align='center'>
       <Swiper
@@ -38,7 +39,10 @@ export const CardsContainer = ({ cars }) => {
       >
         {cars.map((car, index) => (
           <SwiperSlide key={index}>
-            <CardCar car={car} />
+            <CardCar
+              car={car}
+              isRent={!car.km}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -50,7 +54,7 @@ export const CardsContainer = ({ cars }) => {
           margin='10px'
           variant='outline'
         >
-          Explorar mais
+          <Link href={linkTo}>Explorar mais</Link>
         </Button>
       </Center>
     </Flex>

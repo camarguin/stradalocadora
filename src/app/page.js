@@ -5,17 +5,46 @@ import { CardsContainer } from '@/components/CardsContainer'
 import { Footer } from '@/components/Footer'
 import { Hero } from '@/components/Hero'
 import { Menubar } from '@/components/Menubar'
+import { useVehicles } from '@/hooks/useVehicles'
 import { Flex, Heading, Text } from '@chakra-ui/react'
-
-const cars = [
-  { name: 'car 1', km: '53000', price: '139992', year: '19/20' },
-  { name: 'car 2', km: '23000', price: '22000', year: '19/20' },
-  { name: 'car 3', km: '139900', price: '30000', year: '19/20' },
-  { name: 'car 4', km: '39900', price: '36000', year: '22/23' },
-  { name: 'car 5', km: '39900', price: '36000', year: '22/23' },
-]
+import { useEffect, useState } from 'react'
 
 export default function Home() {
+  const { getFeaturedSaleVehicles, getFeaturedRentalVehicles } = useVehicles()
+  const [isLoadingS, setIsLoadingS] = useState(true)
+  const [isLoadingR, setIsLoadingR] = useState(true)
+  const [rentVehicles, setRentVehicles] = useState([])
+  const [saleVehicles, setSaleVehicles] = useState([])
+
+  const fetchFeaturedSaleVehicles = async () => {
+    try {
+      const featuredSaleVehicles = await getFeaturedSaleVehicles()
+      console.log('Successfully fetched featured sales vehicles')
+      setSaleVehicles(featuredSaleVehicles)
+    } catch (error) {
+      console.error('Error fetching featured sales vehicles:', error)
+    } finally {
+      setIsLoadingS(false) // Set loading to false when done fetching
+    }
+  }
+
+  const fetchFeaturedRentlVehicles = async () => {
+    try {
+      const featuredRentVehicles = await getFeaturedRentalVehicles()
+      console.log('Successfully fetched featured rental vehicles:')
+      setRentVehicles(featuredRentVehicles)
+    } catch (error) {
+      console.error('Error fetching featured rental vehicles:', error)
+    } finally {
+      setIsLoadingR(false) // Set loading to false when done fetching
+    }
+  }
+
+  useEffect(() => {
+    fetchFeaturedSaleVehicles()
+    fetchFeaturedRentlVehicles()
+  }, [])
+
   return (
     <>
       <Hero />
@@ -36,7 +65,10 @@ export default function Home() {
         >
           Veículos a venda
         </Text>
-        <CardsContainer cars={cars} />
+        <CardsContainer
+          cars={saleVehicles}
+          linkTo='/comprar'
+        />
         <Text
           padding='20px 30px'
           fontSize='xl'
@@ -44,7 +76,10 @@ export default function Home() {
         >
           Veículos para alugar
         </Text>
-        <CardsContainer cars={cars} />
+        <CardsContainer
+          cars={rentVehicles}
+          linkTo='/alugar'
+        />
       </Flex>
       <About />
     </>

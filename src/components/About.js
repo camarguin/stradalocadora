@@ -38,9 +38,9 @@ export const About = () => {
           veículos, também proporcionamos a possibilidade da realização do tão sonhado veículo próprio, com parcelas que
           cabem no seu bolso e o melhor preço do mercado.
         </Text>
-        <Flex padding='50px 0px'>
+        {/* <Flex padding='50px 0px'>
           <Stats />
-        </Flex>
+        </Flex> */}
       </Box>
     </HStack>
   )

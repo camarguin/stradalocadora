@@ -2,16 +2,18 @@
 import { CardCar } from '@/components/CardCar'
 import { useVehicles } from '@/hooks/useVehicles'
 import { Flex, Grid, GridItem, Heading, Spinner } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 export default function Comprar() {
-  const { vehicles, getSaleVehicles } = useVehicles()
+  const { getSaleVehicles } = useVehicles()
   const [isLoading, setIsLoading] = useState(true)
+  const [vehicles, setVehicles] = useState([])
 
   const fetchRentalVehicles = async () => {
     try {
       const saleVehicles = await getSaleVehicles()
-      console.log('Successfully fetched rental vehicles')
+      console.log('Successfully fetched sales vehicles')
+      setVehicles(saleVehicles)
     } catch (error) {
       console.error('Error fetching rental vehicles:', error)
     } finally {
@@ -22,6 +24,8 @@ export default function Comprar() {
   useEffect(() => {
     fetchRentalVehicles()
   }, [])
+
+  const memoizedVehicles = useMemo(() => vehicles, [vehicles])
 
   return (
     <Flex
@@ -54,7 +58,7 @@ export default function Comprar() {
           }}
           gap={{ lg: 10, md: 8, sm: 2 }}
         >
-          {vehicles.map((vehicle) => (
+          {memoizedVehicles.map((vehicle) => (
             <CardCar
               key={vehicle.id}
               car={vehicle}

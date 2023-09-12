@@ -1,5 +1,5 @@
 import { db } from '@/services/firebase'
-import { collection, doc, getDocs, setDoc, query, writeBatch, where } from 'firebase/firestore'
+import { collection, doc, getDocs, setDoc, query, writeBatch, where, updateDoc } from 'firebase/firestore'
 import { useState } from 'react'
 
 export const useVehicles = () => {
@@ -75,7 +75,7 @@ export const useVehicles = () => {
 
       querySnapshot.forEach((doc) => {
         const docRef = doc.ref
-        batch.update(docRef, { featured: false })
+        batch.update(docRef, { isRented: false })
       })
 
       await batch.commit()
@@ -85,15 +85,29 @@ export const useVehicles = () => {
     }
   }
 
+  const updateRentedVehicle = async (vehicleId, newValue) => {
+    const vehicleRef = doc(db, 'rent', vehicleId)
+    try {
+      await updateDoc(vehicleRef, {
+        isRented: newValue,
+      })
+    } catch (error) {
+      console.error('Error updating document:', error)
+    }
+  }
+
   const addSaleVehicle = async ({ vehicleData }) => {
     try {
       const docRef = await addDoc(saleCollection, vehicleData)
     } catch (error) {}
   }
+
   const addRentalVehicle = async ({ vehicleData }) => {
     try {
       const docRef = await addDoc(rentCollection, vehicleData)
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error adding document:', error)
+    }
   }
 
   // Add many
@@ -124,5 +138,6 @@ export const useVehicles = () => {
     getFeaturedRentalVehicles,
     addVehicles,
     updateAllVehicles,
+    updateRentedVehicle,
   }
 }

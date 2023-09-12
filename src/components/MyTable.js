@@ -61,6 +61,7 @@ const MyTable = ({ columns, data, isProducts }) => {
       <Button
         leftIcon={<AiOutlinePlus />}
         variant='primary'
+        onClick={() => console.log('hello')}
       >
         <AiFillCar />
       </Button>

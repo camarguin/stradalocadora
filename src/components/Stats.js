@@ -8,7 +8,7 @@ const StatsCard = ({ title, stat, icon }) => {
   return (
     <Stat
       px={{ base: 2, md: 4 }}
-      py={'5'}
+      py='5'
       shadow={'xl'}
       border={'1px solid'}
       borderColor='myBlue.200'
@@ -52,7 +52,7 @@ export const Stats = () => {
       px={{ base: 2, sm: 12, md: 17 }}
     >
       <SimpleGrid
-        columns={{ base: 1, md: 3 }}
+        columns={{ base: 1, md: 2, lg: 2, xl: 2, '2xl': 3 }}
         spacing={{ base: 5, lg: 8 }}
       >
         <StatsCard

@@ -8,6 +8,7 @@ import { Inter } from 'next/font/google'
 import { usePathname } from 'next/navigation'
 import { FloatingWhatsApp } from 'react-floating-whatsapp'
 import Head from './head'
+import { ProvideAuth } from '@/contexts/auth'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,22 +20,24 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <Head />
       <body className={inter.className}>
-        <ChakraProvider theme={theme}>
-          {isAdminPath.includes('/admin') ? <AdminMenuBar /> : <Menubar />}
-          {children}
-          {isAdminPath.includes('/admin') ? null : <Footer />}
-          {isAdminPath.includes('/admin') ? null : (
-            <FloatingWhatsApp
-              avatar='./avatar.jpeg'
-              phoneNumber='5534998392344'
-              accountName='Strada Locadora'
-              chatMessage='Olá, o que podemos te ajudar?'
-              placeholder='Digite sua mensagem...'
-              statusMessage='Atendimento das 08:00 as 18:00
+        <ProvideAuth>
+          <ChakraProvider theme={theme}>
+            {isAdminPath.includes('/admin') ? <AdminMenuBar /> : <Menubar />}
+            {children}
+            {isAdminPath.includes('/admin') ? null : <Footer />}
+            {isAdminPath.includes('/admin') ? null : (
+              <FloatingWhatsApp
+                avatar='./avatar.jpeg'
+                phoneNumber='5534998392344'
+                accountName='Strada Locadora'
+                chatMessage='Olá, o que podemos te ajudar?'
+                placeholder='Digite sua mensagem...'
+                statusMessage='Atendimento das 08:00 as 18:00
           Segunda a Sexta'
-            />
-          )}
-        </ChakraProvider>
+              />
+            )}
+          </ChakraProvider>
+        </ProvideAuth>
       </body>
     </html>
   )

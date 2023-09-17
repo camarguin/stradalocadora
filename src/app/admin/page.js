@@ -1,25 +1,29 @@
 'use client'
+import { LoginForm } from '@/components/LoginForm'
+import { useAuth } from '@/contexts/auth'
 import { useVehicles } from '@/hooks/useVehicles'
-import { Button, Center } from '@chakra-ui/react'
+import { Button, Center, Flex, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import React from 'react'
 
-export default function page() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { vehicles, addVehicles, updateAllVehicles } = useVehicles()
+export default function Admin() {
+  const { user } = useAuth()
 
-  const handleAddVehicles = () => {
-    updateAllVehicles()
+  if (!user) {
+    return (
+      <Flex
+        height='300px'
+        justify='center'
+        align='center'
+      >
+        <LoginForm />
+      </Flex>
+    )
+  } else {
+    return (
+      <Flex>
+        <Text fontSize='2xl'>Bem vindo de volta, escolha uma das opções no menu acima</Text>
+      </Flex>
+    )
   }
-  return (
-    <Center height='90vh'>
-      <Button>
-        <Link href='/admin/carros-alugar'>Ver carros para alugar</Link>
-      </Button>
-      <Button>
-        <Link href='/admin/carros-venda'>Ver carros a venda</Link>
-      </Button>
-      {/* <Button onClick={handleAddVehicles}>click to add many</Button> */}
-    </Center>
-  )
 }

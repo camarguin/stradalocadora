@@ -52,19 +52,11 @@ const MyTable = ({ columns, data, isProducts }) => {
     useSortBy,
     usePagination
   )
-  const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Container
       padding='0px 20px'
       maxW
     >
-      <Button
-        leftIcon={<AiOutlinePlus />}
-        variant='primary'
-        onClick={() => console.log('hello')}
-      >
-        <AiFillCar />
-      </Button>
       <Table {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => {

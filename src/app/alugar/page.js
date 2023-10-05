@@ -5,7 +5,7 @@ import { Flex, Grid, Heading, Input, Spinner, Text } from '@chakra-ui/react'
 import React, { useEffect, useMemo, useState } from 'react'
 
 export default function Alugar() {
-  const { getRentalVehicles } = useVehicles()
+  const { getRentalVehicles, addRentalVehicle, deleteRentVehicle } = useVehicles()
   const [isLoading, setIsLoading] = useState(true)
   const [vehicles, setVehicles] = useState([])
   const [searchQuery, setSearchQuery] = useState('')

@@ -16,7 +16,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Switch,
-  VStack,
   useDisclosure,
 } from '@chakra-ui/react'
 import Image from 'next/image'
@@ -24,30 +23,58 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { AiFillCar, AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from 'react-icons/ai'
 
+const initialVehicleData = {
+  name: '',
+  color: '',
+  featured: false,
+  fipe: 0,
+  image: '',
+  km: 0,
+  percentage: 0,
+  plate: '',
+  imagePath: '',
+  price: 0,
+  year: '',
+}
+
 export default function CarrosVenda() {
-  const { getSaleVehicles, uploadProgress } = useVehicles()
+  const { getSaleVehicles, uploadProgress, addSaleVehicle, deleteSaleVehicle, updateSaleVehicle } = useVehicles()
   const { user } = useAuth()
   const { isOpen: isAddModalOpen, onOpen: onAddModalOpen, onClose: onAddModalClose } = useDisclosure()
   const { isOpen: isEditModalOpen, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
-  // const [isEditUploading, setIsEditUploading] = useState(false)
   const [isFetchLoading, setFetchIsLoading] = useState(true)
   const [vehicles, setVehicles] = useState([])
-  const [vehicleData, setVehicleData] = useState({
-    name: '',
-    color: '',
-    featured: false,
-    fipe: 0,
-    image: '',
-    km: 0,
-    percentage: 0,
-    plate: '',
-    path: '',
-    price: 0,
-    year: '',
-  })
+  const [vehicleData, setVehicleData] = useState(initialVehicleData)
   const router = useRouter()
+
+  const updateDeleted = (vehicleId) => {
+    setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle.id !== vehicleId))
+  }
+
+  useEffect(() => {
+    console.log(vehicleData)
+  }, [vehicleData])
+
+  const fetchRentalVehicles = async () => {
+    try {
+      const saleVehicles = await getSaleVehicles()
+      console.log('Fetched sale vehicles')
+      setVehicles(saleVehicles)
+    } catch (error) {
+      console.error('Error fetching sale vehicles:', error)
+    } finally {
+      setFetchIsLoading(false)
+    }
+  }
+
+  const handleAddSubmit = async (e) => {
+    e.preventDefault()
+    await addSaleVehicle(vehicleData)
+    onAddModalClose()
+    setVehicleData(initialVehicleData)
+  }
 
   const updateVehicleData = (name, value) => {
     setVehicleData((prevData) => ({
@@ -59,26 +86,11 @@ export default function CarrosVenda() {
     }))
   }
 
-  const fetchRentalVehicles = async () => {
-    try {
-      const saleVehicles = await getSaleVehicles()
-      console.log('Fetched sale vehicles')
-      setVehicles(saleVehicles)
-    } catch (error) {
-      console.error('Error fetching sale vehicles:', error)
-    } finally {
-      setFetchIsLoading(false) // Set loading to false when done fetching
-    }
-  }
-
-  const handleAddSubmit = (e) => {
+  const handleEditSubmit = async (e) => {
     e.preventDefault()
-    console.log(vehicleData)
-  }
-
-  const handleEditSubmit = (e) => {
-    e.preventDefault()
-    console.log(vehicleData)
+    await updateSaleVehicle(vehicleData?.id, vehicleData)
+    onAddModalClose()
+    setVehicleData(initialVehicleData)
   }
 
   useEffect(() => {
@@ -157,32 +169,40 @@ export default function CarrosVenda() {
           )
         },
       },
-      {
-        Header: 'Editar',
-        Cell: ({ value, row }) => {
-          const vehicleId = row.original.id
-          return (
-            <IconButton
-              variant='ghost'
-              aria-label='Edit'
-              icon={<AiOutlineEdit />}
-              onClick={() => {
-                setVehicleData(row.original)
-                onEditModalOpen()
-                console.log(row.original)
-              }}
-            />
-          )
-        },
-      },
+      // {
+      //   Header: 'Editar',
+      //   Cell: ({ value, row }) => {
+      //     const vehicleId = row.original.id
+      //     return (
+      //       <IconButton
+      //         variant='ghost'
+      //         aria-label='Edit'
+      //         icon={<AiOutlineEdit />}
+      //         onClick={() => {
+      //           setVehicleData(row.original)
+      //           onEditModalOpen()
+      //           console.log(row.original)
+      //         }}
+      //       />
+      //     )
+      //   },
+      // },
       {
         Header: 'Deletar',
-        Cell: ({ value }) => {
+        Cell: ({ value, row }) => {
+          const vehicleId = row.original.id
+
+          const handleDelete = async () => {
+            await deleteSaleVehicle(vehicleId)
+            updateDeleted(vehicleId)
+          }
+
           return (
             <IconButton
               variant='ghost'
               aria-label='Delete'
               icon={<AiOutlineDelete />}
+              onClick={handleDelete}
             />
           )
         },
@@ -209,7 +229,7 @@ export default function CarrosVenda() {
         >
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Adicionar Veículo</ModalHeader>
+            <ModalHeader>Adicionar Veículo para vender</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <AddVehicleForm
@@ -233,7 +253,6 @@ export default function CarrosVenda() {
                   isLoading={isUploading === true}
                   variant='primary'
                   onClick={handleAddSubmit}
-                  // isDisabled={progress !== 100}
                 >
                   Adicionar
                 </Button>
@@ -270,6 +289,7 @@ export default function CarrosVenda() {
                   Cancelar
                 </Button>
                 <Button
+                  isLoading={isUploading === true}
                   variant='primary'
                   onClick={handleEditSubmit}
                 >

@@ -20,6 +20,7 @@ import { BiImageAdd } from 'react-icons/bi'
 import { useVehicles } from '@/hooks/useVehicles'
 
 export const EditVehicleForm = ({
+  isRent,
   handleSubmit,
   vehicleData,
   updateVehicleData,
@@ -33,7 +34,9 @@ export const EditVehicleForm = ({
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    if (name === 'image') {
+    if (name === 'imagePath') {
+      updateVehicleData('imagePath', value)
+    } else if (name === 'image') {
       updateVehicleData('image', value)
     } else {
       updateVehicleData(name, value)
@@ -46,7 +49,7 @@ export const EditVehicleForm = ({
       const { downloadURL, fullPath } = await uploadFileFirebase(file)
 
       updateVehicleData('image', downloadURL)
-      updateVehicleData('path', fullPath)
+      updateVehicleData('imagePath', fullPath)
     } catch (error) {
       toast({
         title: 'Erro',
@@ -95,54 +98,49 @@ export const EditVehicleForm = ({
             textTransform='uppercase'
           />
         </FormControl>
+        {!isRent && (
+          <HStack>
+            <FormControl id='vehicleYear'>
+              <FormLabel>Ano</FormLabel>
+              <Input
+                as={InputMask}
+                mask='99/99'
+                name='year'
+                value={vehicleData.year}
+                onChange={handleChange}
+                textTransform='uppercase'
+              />
+            </FormControl>
+            <FormControl id='vehicleColor'>
+              <FormLabel>Cor</FormLabel>
+              <Input
+                type='text'
+                name='color'
+                value={vehicleData.color}
+                onChange={handleChange}
+                textTransform='uppercase'
+                required
+              />
+            </FormControl>
+          </HStack>
+        )}
         <HStack>
-          <FormControl
-            id='vehicleYear'
-            // isRequired
-          >
-            <FormLabel>Ano</FormLabel>
-            <Input
-              as={InputMask}
-              mask='99/99'
-              name='year'
-              value={vehicleData.year}
-              onChange={handleChange}
-              textTransform='uppercase'
-            />
-          </FormControl>
-          <FormControl
-            id='vehicleColor'
-            // isRequired
-          >
-            <FormLabel>Cor</FormLabel>
-            <Input
-              type='text'
-              name='color'
-              value={vehicleData.color}
-              onChange={handleChange}
-              textTransform='uppercase'
-              required
-            />
-          </FormControl>
-        </HStack>
-        <HStack>
-          <FormControl
-            id='vehicleKM'
-            // isRequired
-          >
-            <FormLabel>KM</FormLabel>
-            <Input
-              type='number'
-              name='km'
-              value={vehicleData.km}
-              onChange={handleChange}
-              textTransform='uppercase'
-            />
-          </FormControl>
-          <FormControl
-            id='vehiclePlate'
-            // isRequired
-          >
+          {!isRent && (
+            <FormControl
+              id='vehicleKM'
+              // isRequired
+            >
+              <FormLabel>KM</FormLabel>
+              <Input
+                type='number'
+                name='km'
+                value={vehicleData.km}
+                onChange={handleChange}
+                textTransform='uppercase'
+              />
+            </FormControl>
+          )}
+          <FormControl id='vehiclePlate'>
             <FormLabel>Placa</FormLabel>
             <Input
               name='plate'
@@ -155,39 +153,39 @@ export const EditVehicleForm = ({
           </FormControl>
         </HStack>
 
-        <FormControl
-          id='vehicleFipe'
-          // isRequired
-        >
-          <FormLabel>Valor Fipe</FormLabel>
-          <InputGroup>
-            <InputLeftElement pointerEvents='none'>R$</InputLeftElement>
-            <Input
-              type='number'
-              name='fipe'
-              value={vehicleData.fipe}
-              onChange={handleChange}
-              textTransform='uppercase'
-            />
-          </InputGroup>
-        </FormControl>
-        <FormControl
-          id='vehiclePrice'
-          isRequired
-        >
-          <FormLabel>Valor de venda</FormLabel>
-          <InputGroup>
-            <InputLeftElement pointerEvents='none'>R$</InputLeftElement>
-            <Input
-              // isRequired
-              type='number'
-              name='price'
-              value={vehicleData.price}
-              onChange={handleChange}
-              textTransform='uppercase'
-            />
-          </InputGroup>
-        </FormControl>
+        {!isRent && (
+          <>
+            <FormControl id='vehicleFipe'>
+              <FormLabel>Valor Fipe</FormLabel>
+              <InputGroup>
+                <InputLeftElement pointerEvents='none'>R$</InputLeftElement>
+                <Input
+                  type='number'
+                  name='fipe'
+                  value={vehicleData.fipe}
+                  onChange={handleChange}
+                  textTransform='uppercase'
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl
+              id='vehiclePrice'
+              isRequired
+            >
+              <FormLabel>Valor de venda</FormLabel>
+              <InputGroup>
+                <InputLeftElement pointerEvents='none'>R$</InputLeftElement>
+                <Input
+                  type='number'
+                  name='price'
+                  value={vehicleData.price}
+                  onChange={handleChange}
+                  textTransform='uppercase'
+                />
+              </InputGroup>
+            </FormControl>
+          </>
+        )}
         <FormControl id='vehicleImage'>
           <FormLabel
             htmlFor='uploadImage'

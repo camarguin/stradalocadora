@@ -1,13 +1,15 @@
 import { db, storage } from '@/services/firebase'
-import { collection, doc, getDocs, query, writeBatch, where, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, query, writeBatch, where, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 
 import { useState } from 'react'
+import { useToast } from '@chakra-ui/react'
 
 export const useVehicles = () => {
   const [vehicles, setVehicles] = useState([])
   const [uploadProgress, setUploadProgress] = useState(0)
+  const toast = useToast()
   const saleCollection = collection(db, 'sale')
   const rentCollection = collection(db, 'rent')
 
@@ -93,28 +95,151 @@ export const useVehicles = () => {
     }
   }
 
+  const updateSaleVehicle = async (vehicleId, vehicleData) => {
+    const vehicleRef = doc(db, saleCollection, vehicleId)
+    const vehicleDataWithoutId = Object.fromEntries(Object.entries(vehicleData).filter(([key]) => key !== 'id'))
+    try {
+      await updateDoc(vehicleRef, vehicleDataWithoutId)
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo atualizado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (error) {
+      console.error('Error updating document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao atualizar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const updateRentVehicle = async (vehicleId, vehicleData) => {
+    const vehicleRef = doc(db, saleCollection, vehicleId)
+    try {
+      await updateDoc(vehicleRef, vehicleData)
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo atualizado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (error) {
+      console.error('Error updating document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao atualizar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  // Update featured value
+  const updateFeatured = async (vehicleId, newValue) => {
+    const vehicleRef = doc(db, rentCollection, vehicleId)
+    try {
+      await updateDoc(vehicleRef, {
+        featured: newValue,
+      })
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo atualizado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (error) {
+      console.error('Error updating document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao atualizar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  // Update the isRented value
   const updateRentedVehicle = async (vehicleId, newValue) => {
-    const vehicleRef = doc(db, 'rent', vehicleId)
+    const vehicleRef = doc(db, rentCollection, vehicleId)
     try {
       await updateDoc(vehicleRef, {
         isRented: newValue,
       })
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo atualizado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
     } catch (error) {
       console.error('Error updating document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao atualizar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
     }
   }
 
-  const addSaleVehicle = async ({ vehicleData }) => {
+  const addSaleVehicle = async (vehicleData) => {
+    if (vehicleData.image === '') {
+      vehicleData.imagePath = 'vehicles/ComingSoon.jpg'
+      vehicleData.image =
+        'https://firebasestorage.googleapis.com/v0/b/stradalocadora-b4917.appspot.com/o/vehicles%2FComingSoon.jpg?alt=media&token=9b7c1cb7-858e-4901-89b3-64968fb5ef82&_gl=1*8r5pa5*_ga*MTAzODQ4NzgyLjE2ODg1MTc2ODA.*_ga_CW55HF8NVT*MTY5NjQ2NTExMi43MC4xLjE2OTY0NjY5ODkuMTIuMC4w '
+    }
     try {
       const docRef = await addDoc(saleCollection, vehicleData)
-    } catch (error) {}
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo adicionado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (error) {
+      console.log('Error adding document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao adicionar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
-  const addRentalVehicle = async ({ vehicleData }) => {
+  const addRentalVehicle = async (vehicleData) => {
     try {
       const docRef = await addDoc(rentCollection, vehicleData)
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo adicionado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
     } catch (error) {
       console.error('Error adding document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao adicionar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
     }
   }
 
@@ -154,6 +279,55 @@ export const useVehicles = () => {
     }
   }
 
+  const deleteSaleVehicle = async (vehicleId) => {
+    try {
+      const vehicleDocRef = doc(saleCollection, vehicleId)
+      await deleteDoc(vehicleDocRef)
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo removido com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      console.log(`Document with ID ${vehicleId} deleted successfully.`)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Falha ao remover veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+      console.error('Error deleting document:', error)
+    }
+  }
+
+  const deleteRentVehicle = async (vehicleId) => {
+    try {
+      const vehicleDocRef = doc(rentCollection, vehicleId)
+      await deleteDoc(vehicleDocRef)
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo removido com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      console.log(`Document with ID ${vehicleId} deleted successfully.`)
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Falha ao remover veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+      console.error('Error deleting document:', error)
+    }
+  }
+
   return {
     vehicles,
     uploadProgress,
@@ -161,6 +335,9 @@ export const useVehicles = () => {
     addSaleVehicle,
     addRentalVehicle,
     addSaleVehicle,
+    updateSaleVehicle,
+    updateRentVehicle,
+    updateFeatured,
     getRentalVehicles,
     getSaleVehicles,
     getFeaturedSaleVehicles,
@@ -169,5 +346,7 @@ export const useVehicles = () => {
     updateAllVehicles,
     updateRentedVehicle,
     uploadFileFirebase,
+    deleteSaleVehicle,
+    deleteRentVehicle,
   }
 }

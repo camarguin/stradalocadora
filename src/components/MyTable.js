@@ -23,9 +23,10 @@ import {
 } from '@chakra-ui/react'
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table'
 import { ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from '@chakra-ui/icons'
-import { AiFillCar, AiOutlinePlus } from 'react-icons/ai'
+import { AiFillCar, AiOutlineAppstoreAdd, AiOutlinePlus } from 'react-icons/ai'
+import GlobalFilter from './GlobalFilter'
 
-const MyTable = ({ columns, data, isProducts }) => {
+const MyTable = ({ columns, data, addVehicleOpen }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -57,6 +58,22 @@ const MyTable = ({ columns, data, isProducts }) => {
       padding='0px 20px'
       maxW
     >
+      <Flex
+        justify='space-between'
+        padding='10px'
+      >
+        <GlobalFilter
+          filter={globalFilter}
+          setFilter={setGlobalFilter}
+        />
+        <Button
+          leftIcon={<AiOutlinePlus />}
+          variant='primary'
+          onClick={addVehicleOpen}
+        >
+          <AiFillCar />
+        </Button>
+      </Flex>
       <Table {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => {

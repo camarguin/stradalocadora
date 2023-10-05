@@ -1,11 +1,13 @@
 'use client'
 import { AddVehicleForm } from '@/components/AddVehicleForm'
+import { EditVehicleForm } from '@/components/EditVehicleForm'
 import MyTable from '@/components/MyTable'
 import { useAuth } from '@/contexts/auth'
 import { useVehicles } from '@/hooks/useVehicles'
 import {
   Button,
   HStack,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,18 +15,24 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Switch,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
-import { AiFillCar, AiOutlinePlus } from 'react-icons/ai'
+import { AiFillCar, AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from 'react-icons/ai'
 
 export default function CarrosVenda() {
-  const { getSaleVehicles, addSaleVehicle } = useVehicles()
+  const { getSaleVehicles, uploadProgress } = useVehicles()
   const { user } = useAuth()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [isLoading, setIsLoading] = useState(true)
+  const { isOpen: isAddModalOpen, onOpen: onAddModalOpen, onClose: onAddModalClose } = useDisclosure()
+  const { isOpen: isEditModalOpen, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
+  const [progress, setProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
+  // const [isEditUploading, setIsEditUploading] = useState(false)
+  const [isFetchLoading, setFetchIsLoading] = useState(true)
   const [vehicles, setVehicles] = useState([])
   const [vehicleData, setVehicleData] = useState({
     name: '',
@@ -35,19 +43,20 @@ export default function CarrosVenda() {
     km: 0,
     percentage: 0,
     plate: '',
+    path: '',
     price: 0,
     year: '',
   })
   const router = useRouter()
 
   const updateVehicleData = (name, value) => {
-    setVehicleData({
-      ...vehicleData,
-      [name]: value.toUpperCase(),
+    setVehicleData((prevData) => ({
+      ...prevData,
+      [name]: name === 'image' || name === 'path' ? value : value.toUpperCase(),
       percentage:
         ((name === 'price' ? parseFloat(value) : vehicleData.price) * 100) /
         (name === 'fipe' ? parseFloat(value) : vehicleData.fipe),
-    })
+    }))
   }
 
   const fetchRentalVehicles = async () => {
@@ -58,11 +67,16 @@ export default function CarrosVenda() {
     } catch (error) {
       console.error('Error fetching sale vehicles:', error)
     } finally {
-      setIsLoading(false) // Set loading to false when done fetching
+      setFetchIsLoading(false) // Set loading to false when done fetching
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleAddSubmit = (e) => {
+    e.preventDefault()
+    console.log(vehicleData)
+  }
+
+  const handleEditSubmit = (e) => {
     e.preventDefault()
     console.log(vehicleData)
   }
@@ -76,7 +90,16 @@ export default function CarrosVenda() {
       {
         Header: 'Foto',
         accessor: 'image',
-        Cell: ({}) => {},
+        Cell: ({ value }) => {
+          return (
+            <Image
+              width={50}
+              height={50}
+              src={value ? value : '/ComingSoon.png'}
+              alt=''
+            />
+          )
+        },
       },
       {
         Header: 'Veiculo',
@@ -117,19 +140,51 @@ export default function CarrosVenda() {
         Cell: ({ value }) => {
           const formattedPercentage = (value / 100).toFixed(2) + '%'
           return formattedPercentage
-          // return value.toFixed(2) + '%'
+        },
+      },
+      {
+        Header: 'Destaque',
+        accessor: 'featured',
+        Cell: ({ value }) => {
+          return (
+            <Switch
+              id='featured'
+              colorScheme='green'
+              defaultChecked={value}
+              value={value}
+              // onChange={handleSwitch}
+            />
+          )
         },
       },
       {
         Header: 'Editar',
-        Cell: ({ value }) => {
-          // return value.toFixed(2) + '%'
+        Cell: ({ value, row }) => {
+          const vehicleId = row.original.id
+          return (
+            <IconButton
+              variant='ghost'
+              aria-label='Edit'
+              icon={<AiOutlineEdit />}
+              onClick={() => {
+                setVehicleData(row.original)
+                onEditModalOpen()
+                console.log(row.original)
+              }}
+            />
+          )
         },
       },
       {
         Header: 'Deletar',
         Cell: ({ value }) => {
-          // return value.toFixed(2) + '%'
+          return (
+            <IconButton
+              variant='ghost'
+              aria-label='Delete'
+              icon={<AiOutlineDelete />}
+            />
+          )
         },
       },
     ],
@@ -147,16 +202,9 @@ export default function CarrosVenda() {
   } else {
     return (
       <div>
-        <Button
-          leftIcon={<AiOutlinePlus />}
-          variant='primary'
-          onClick={onOpen}
-        >
-          <AiFillCar />
-        </Button>
         <Modal
-          isOpen={isOpen}
-          onClose={onClose}
+          isOpen={isAddModalOpen}
+          onClose={onAddModalClose}
           size='xl'
         >
           <ModalOverlay />
@@ -165,22 +213,27 @@ export default function CarrosVenda() {
             <ModalCloseButton />
             <ModalBody>
               <AddVehicleForm
-                handleSubmit={handleSubmit}
+                handleSubmit={handleAddSubmit}
                 vehicleData={vehicleData}
                 updateVehicleData={updateVehicleData}
+                progress={progress}
+                setProgress={setProgress}
+                setIsUploading={setIsUploading}
               />
             </ModalBody>
             <ModalFooter>
               <HStack>
                 <Button
                   variant='outline'
-                  onClick={onClose}
+                  onClick={onAddModalClose}
                 >
                   Cancelar
                 </Button>
                 <Button
+                  isLoading={isUploading === true}
                   variant='primary'
-                  onClick={handleSubmit}
+                  onClick={handleAddSubmit}
+                  // isDisabled={progress !== 100}
                 >
                   Adicionar
                 </Button>
@@ -188,7 +241,46 @@ export default function CarrosVenda() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        {/* Edit Modal */}
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={onEditModalClose}
+          size='xl'
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Editar Veículo</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <EditVehicleForm
+                handleSubmit={handleEditSubmit}
+                vehicleData={vehicleData}
+                updateVehicleData={updateVehicleData}
+                progress={progress}
+                setProgress={setProgress}
+                setIsUploading={setIsUploading}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <HStack>
+                <Button
+                  variant='outline'
+                  onClick={onEditModalClose}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  variant='primary'
+                  onClick={handleEditSubmit}
+                >
+                  Salvar
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         <MyTable
+          addVehicleOpen={onAddModalOpen}
           columns={columns}
           data={vehicles}
         />

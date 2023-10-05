@@ -19,7 +19,7 @@ import Image from 'next/image'
 import { BiImageAdd } from 'react-icons/bi'
 import { useVehicles } from '@/hooks/useVehicles'
 
-export const AddVehicleForm = ({
+export const EditVehicleForm = ({
   handleSubmit,
   vehicleData,
   updateVehicleData,
@@ -33,9 +33,7 @@ export const AddVehicleForm = ({
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    if (name === 'path') {
-      updateVehicleData('path', value)
-    } else if (name === 'image') {
+    if (name === 'image') {
       updateVehicleData('image', value)
     } else {
       updateVehicleData(name, value)
@@ -196,7 +194,7 @@ export const AddVehicleForm = ({
             width='max-content'
           >
             Imagem do Veiculo
-            {image.preview ? (
+            {vehicleData?.image ? (
               <Box
                 marginTop='10px'
                 borderStyle='dashed'
@@ -209,7 +207,7 @@ export const AddVehicleForm = ({
                 <Image
                   width={100}
                   height={100}
-                  src={image.preview}
+                  src={vehicleData?.image}
                   alt='Imagem Veiculo'
                 />
                 <Progress

@@ -33,7 +33,7 @@ export const CardCar = ({ car, isRent }) => {
           overflow='hidden'
         >
           <Image
-            src='/ComingSoon.png'
+            src={car.image}
             alt='Picture of the car'
             width={300}
             height={200}

@@ -1,9 +1,13 @@
-import { db } from '@/services/firebase'
-import { collection, doc, getDocs, setDoc, query, writeBatch, where, updateDoc } from 'firebase/firestore'
+import { db, storage } from '@/services/firebase'
+import { collection, doc, getDocs, query, writeBatch, where, updateDoc } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
+import { v4 as uuidv4 } from 'uuid'
+
 import { useState } from 'react'
 
 export const useVehicles = () => {
   const [vehicles, setVehicles] = useState([])
+  const [uploadProgress, setUploadProgress] = useState(0)
   const saleCollection = collection(db, 'sale')
   const rentCollection = collection(db, 'rent')
 
@@ -75,7 +79,11 @@ export const useVehicles = () => {
 
       querySnapshot.forEach((doc) => {
         const docRef = doc.ref
-        batch.update(docRef, { isRented: false })
+        batch.update(docRef, {
+          imagePath: 'vehicles/ComingSoon.jpg',
+          image:
+            'https://firebasestorage.googleapis.com/v0/b/stradalocadora-b4917.appspot.com/o/vehicles%2FComingSoon.jpg?alt=media&token=9b7c1cb7-858e-4901-89b3-64968fb5ef82&_gl=1*8r5pa5*_ga*MTAzODQ4NzgyLjE2ODg1MTc2ODA.*_ga_CW55HF8NVT*MTY5NjQ2NTExMi43MC4xLjE2OTY0NjY5ODkuMTIuMC4w ',
+        })
       })
 
       await batch.commit()
@@ -127,8 +135,29 @@ export const useVehicles = () => {
     }
   }
 
+  const uploadFileFirebase = async (file) => {
+    const uniqueID = uuidv4()
+    const uploadPath = ref(storage, `vehicles/${uniqueID}`)
+    const fullPath = `vehicles/${uniqueID}`
+
+    try {
+      const uploadTask = uploadBytes(uploadPath, file).then((snapshot) => {
+        setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+      })
+
+      await uploadTask
+      const downloadURL = await getDownloadURL(uploadPath)
+      return { downloadURL, fullPath }
+    } catch (error) {
+      console.error('Error uploading file to Firebase Storage:', error)
+      throw error
+    }
+  }
+
   return {
     vehicles,
+    uploadProgress,
+    setUploadProgress,
     addSaleVehicle,
     addRentalVehicle,
     addSaleVehicle,
@@ -139,5 +168,6 @@ export const useVehicles = () => {
     addVehicles,
     updateAllVehicles,
     updateRentedVehicle,
+    uploadFileFirebase,
   }
 }

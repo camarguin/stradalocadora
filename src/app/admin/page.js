@@ -8,6 +8,7 @@ import React from 'react'
 
 export default function Admin() {
   const { user } = useAuth()
+  // const { updateAllVehicles } = useVehicles()
 
   if (!user) {
     return (

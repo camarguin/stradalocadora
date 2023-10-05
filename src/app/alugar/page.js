@@ -1,13 +1,14 @@
 'use client'
 import { CardCar } from '@/components/CardCar'
 import { useVehicles } from '@/hooks/useVehicles'
-import { Flex, Grid, Heading, Spinner, Text } from '@chakra-ui/react'
+import { Flex, Grid, Heading, Input, Spinner, Text } from '@chakra-ui/react'
 import React, { useEffect, useMemo, useState } from 'react'
 
 export default function Alugar() {
   const { getRentalVehicles } = useVehicles()
   const [isLoading, setIsLoading] = useState(true)
   const [vehicles, setVehicles] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchRentalVehicles = async () => {
     try {
@@ -25,7 +26,10 @@ export default function Alugar() {
     fetchRentalVehicles()
   }, [])
 
-  const memoizedVehicles = useMemo(() => vehicles, [vehicles])
+  const filteredVehicles = useMemo(
+    () => vehicles.filter((vehicle) => vehicle.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [vehicles, searchQuery]
+  )
 
   return (
     <Flex
@@ -41,6 +45,13 @@ export default function Alugar() {
       >
         | Veículos para alugar
       </Heading>
+      <Input
+        placeholder='Pesquisar veículos...'
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        marginBottom='20px'
+      />
+
       {isLoading ? (
         <Flex
           w='100%'
@@ -58,7 +69,7 @@ export default function Alugar() {
           }}
           gap={{ lg: 10, md: 8, sm: 2 }}
         >
-          {memoizedVehicles.map((vehicle) => (
+          {filteredVehicles.map((vehicle) => (
             <CardCar
               isRent
               key={vehicle.id}

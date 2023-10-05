@@ -1,6 +1,6 @@
 'use client'
-import React from 'react'
-import { Box, Button, Center, Flex, useMediaQuery } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Box, Button, Center, Flex, Input, useMediaQuery } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
 import 'swiper/css'
@@ -10,12 +10,12 @@ import Link from 'next/link'
 
 export const CardsContainer = ({ cars, linkTo }) => {
   const [isMobile] = useMediaQuery('(max-width: 400px')
+
   return (
     <Flex
       align='center'
       justify='center'
       wrap={isMobile ? 'wrap' : 'nowrap'}
-      // flexDirection={{ base: 'column', md: 'row' }}
     >
       <Swiper
         spaceBetween={10}
@@ -52,10 +52,7 @@ export const CardsContainer = ({ cars, linkTo }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <Center
-        // w={{ xl: '400px', lg: '400px', md: '200px', sm: '50px' }}
-        textAlign='center'
-      >
+      <Center textAlign='center'>
         <Button
           margin='10px'
           variant='outline'

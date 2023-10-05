@@ -63,7 +63,6 @@ export default function CarrosAlugar() {
           const vehicleId = row.original.id
           const [isRented, setIsRented] = useState(value)
           const handleSwitch = async (async) => {
-            console.log(vehicleId)
             const newValue = !isRented
             setIsRented(newValue)
             await updateRentedVehicle(vehicleId, newValue)

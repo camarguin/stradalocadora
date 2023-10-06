@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation'
 import { AddVehicleForm } from '@/components/AddVehicleForm'
 import { EditVehicleForm } from '@/components/EditVehicleForm'
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
+import { collection, onSnapshot } from 'firebase/firestore'
 
 const initialVehicleData = {
   name: '',
@@ -50,17 +51,30 @@ export default function CarrosAlugar() {
     setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle.id !== vehicleId))
   }
 
-  const fetchRentalVehicles = async () => {
-    try {
-      const rentalVehicles = await getRentalVehicles()
-      console.log('Fetched rental vehicles')
-      setVehicles(rentalVehicles)
-    } catch (error) {
-      console.error('Error fetching rental vehicles:', error)
-    } finally {
-      setFetchIsLoading(false)
-    }
-  }
+  // const fetchRentalVehicles = async () => {
+  //   try {
+  //     const rentalVehicles = await getRentalVehicles()
+  //     console.log('Fetched rental vehicles')
+  //     setVehicles(rentalVehicles)
+  //   } catch (error) {
+  //     console.error('Error fetching rental vehicles:', error)
+  //   } finally {
+  //     setFetchIsLoading(false)
+  //   }
+  // }
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'rent'), (snapshot) => {
+      const updatedVehicles = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setVehicles(updatedVehicles)
+    })
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe()
+  }, [])
 
   const handleAddSubmit = async (e) => {
     e.preventDefault()
@@ -78,14 +92,14 @@ export default function CarrosAlugar() {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault()
-    await updateRentVehicle(vehicleData)
+    await updateRentVehicle(vehicleData?.id, vehicleData)
     onEditModalClose()
     setVehicleData(initialVehicleData)
   }
 
-  useEffect(() => {
-    fetchRentalVehicles()
-  }, [])
+  // useEffect(() => {
+  //   fetchRentalVehicles()
+  // }, [])
 
   const columns = useMemo(
     () => [
@@ -106,6 +120,7 @@ export default function CarrosAlugar() {
           const handleSwitch = async (async) => {
             const newValue = !isRented
             setIsRented(newValue)
+            console.log(vehicleId)
             await updateRentedVehicle(vehicleId, newValue)
           }
           return (
@@ -119,23 +134,23 @@ export default function CarrosAlugar() {
           )
         },
       },
-      // {
-      //   Header: 'Editar',
-      //   Cell: ({ value, row }) => {
-      //     const vehicleId = row.original.id
-      //     return (
-      //       <IconButton
-      //         variant='ghost'
-      //         aria-label='Edit'
-      //         icon={<AiOutlineEdit />}
-      //         onClick={() => {
-      //           setVehicleData(row.original)
-      //           onEditModalOpen()
-      //         }}
-      //       />
-      //     )
-      //   },
-      // },
+      {
+        Header: 'Editar',
+        Cell: ({ value, row }) => {
+          const vehicleId = row.original.id
+          return (
+            <IconButton
+              variant='ghost'
+              aria-label='Edit'
+              icon={<AiOutlineEdit />}
+              onClick={() => {
+                setVehicleData(row.original)
+                onEditModalOpen()
+              }}
+            />
+          )
+        },
+      },
       {
         Header: 'Deletar',
         Cell: ({ value, row }) => {

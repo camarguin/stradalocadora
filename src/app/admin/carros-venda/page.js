@@ -4,6 +4,7 @@ import { EditVehicleForm } from '@/components/EditVehicleForm'
 import MyTable from '@/components/MyTable'
 import { useAuth } from '@/contexts/auth'
 import { useVehicles } from '@/hooks/useVehicles'
+import { db } from '@/services/firebase'
 import {
   Button,
   HStack,
@@ -18,6 +19,7 @@ import {
   Switch,
   useDisclosure,
 } from '@chakra-ui/react'
+import { collection, onSnapshot } from 'firebase/firestore'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -38,7 +40,7 @@ const initialVehicleData = {
 }
 
 export default function CarrosVenda() {
-  const { getSaleVehicles, uploadProgress, addSaleVehicle, deleteSaleVehicle, updateSaleVehicle, updateFeatured } =
+  const { getSaleVehicles, uploadProgress, addSaleVehicle, deleteSaleVehicle, updateSaleVehicle, updateSFeatured } =
     useVehicles()
   const { user } = useAuth()
   const { isOpen: isAddModalOpen, onOpen: onAddModalOpen, onClose: onAddModalClose } = useDisclosure()
@@ -50,25 +52,38 @@ export default function CarrosVenda() {
   const [vehicleData, setVehicleData] = useState(initialVehicleData)
   const router = useRouter()
 
-  const updateDeleted = (vehicleId) => {
-    setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle.id !== vehicleId))
-  }
+  // const updateDeleted = (vehicleId) => {
+  //   setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle.id !== vehicleId))
+  // }
 
   useEffect(() => {
-    console.log(vehicleData)
-  }, [vehicleData])
+    console.log(vehicles.length)
+  }, [vehicles])
 
-  const fetchRentalVehicles = async () => {
-    try {
-      const saleVehicles = await getSaleVehicles()
-      console.log('Fetched sale vehicles')
-      setVehicles(saleVehicles)
-    } catch (error) {
-      console.error('Error fetching sale vehicles:', error)
-    } finally {
-      setFetchIsLoading(false)
-    }
-  }
+  // const fetchRentalVehicles = async () => {
+  //   try {
+  //     const saleVehicles = await getSaleVehicles()
+  //     console.log('Fetched sale vehicles')
+  //     setVehicles(saleVehicles)
+  //   } catch (error) {
+  //     console.error('Error fetching sale vehicles:', error)
+  //   } finally {
+  //     setFetchIsLoading(false)
+  //   }
+  // }
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'sale'), (snapshot) => {
+      const updatedVehicles = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setVehicles(updatedVehicles)
+    })
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe()
+  }, [])
 
   const handleAddSubmit = async (e) => {
     e.preventDefault()
@@ -90,13 +105,13 @@ export default function CarrosVenda() {
   const handleEditSubmit = async (e) => {
     e.preventDefault()
     await updateSaleVehicle(vehicleData?.id, vehicleData)
-    onAddModalClose()
+    onEditModalClose()
     setVehicleData(initialVehicleData)
   }
 
-  useEffect(() => {
-    fetchRentalVehicles()
-  }, [])
+  // useEffect(() => {
+  //   fetchRentalVehicles()
+  // }, [])
 
   const columns = useMemo(
     () => [
@@ -164,7 +179,7 @@ export default function CarrosVenda() {
           const handleSwitch = async () => {
             const newValue = !isFeatured
             setIsFeatured(newValue)
-            await updateFeatured(vehicleId, newValue)
+            await updateSFeatured(vehicleId, newValue)
           }
           return (
             <Switch
@@ -177,24 +192,23 @@ export default function CarrosVenda() {
           )
         },
       },
-      // {
-      //   Header: 'Editar',
-      //   Cell: ({ value, row }) => {
-      //     const vehicleId = row.original.id
-      //     return (
-      //       <IconButton
-      //         variant='ghost'
-      //         aria-label='Edit'
-      //         icon={<AiOutlineEdit />}
-      //         onClick={() => {
-      //           setVehicleData(row.original)
-      //           onEditModalOpen()
-      //           console.log(row.original)
-      //         }}
-      //       />
-      //     )
-      //   },
-      // },
+      {
+        Header: 'Editar',
+        Cell: ({ value, row }) => {
+          const vehicleId = row.original.id
+          return (
+            <IconButton
+              variant='ghost'
+              aria-label='Edit'
+              icon={<AiOutlineEdit />}
+              onClick={() => {
+                setVehicleData(row.original)
+                onEditModalOpen()
+              }}
+            />
+          )
+        },
+      },
       {
         Header: 'Deletar',
         Cell: ({ value, row }) => {
@@ -202,7 +216,7 @@ export default function CarrosVenda() {
 
           const handleDelete = async () => {
             await deleteSaleVehicle(vehicleId)
-            updateDeleted(vehicleId)
+            // updateDeleted(vehicleId)
           }
 
           return (

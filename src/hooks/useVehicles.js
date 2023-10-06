@@ -10,6 +10,7 @@ import {
   addDoc,
   deleteDoc,
   setDoc,
+  onSnapshot,
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
@@ -35,6 +36,7 @@ export const useVehicles = () => {
       return error
     }
   }
+
   const getRentalVehicles = async () => {
     try {
       const querySnapshot = await getDocs(rentCollection)
@@ -107,7 +109,7 @@ export const useVehicles = () => {
   }
 
   const updateSaleVehicle = async (vehicleId, vehicleData) => {
-    const vehicleRef = doc(db, saleCollection, vehicleId)
+    const vehicleRef = doc(saleCollection, vehicleId)
     const vehicleDataWithoutId = Object.fromEntries(Object.entries(vehicleData).filter(([key]) => key !== 'id'))
     try {
       await setDoc(vehicleRef, vehicleDataWithoutId)
@@ -131,9 +133,10 @@ export const useVehicles = () => {
   }
 
   const updateRentVehicle = async (vehicleId, vehicleData) => {
-    const vehicleRef = doc(db, rentCollection, vehicleId)
+    const vehicleRef = doc(rentCollection, vehicleId)
+    const vehicleDataWithoutId = Object.fromEntries(Object.entries(vehicleData).filter(([key]) => key !== 'id'))
     try {
-      await updateDoc(vehicleRef, vehicleData)
+      await setDoc(vehicleRef, vehicleDataWithoutId)
       toast({
         title: 'Sucesso',
         description: 'Veículo atualizado com sucesso',
@@ -154,8 +157,33 @@ export const useVehicles = () => {
   }
 
   // Update featured value
-  const updateFeatured = async (vehicleId, newValue) => {
-    const vehicleRef = doc(db, rentCollection, vehicleId)
+  const updateSFeatured = async (vehicleId, newValue) => {
+    const vehicleRef = doc(saleCollection, vehicleId)
+    try {
+      await updateDoc(vehicleRef, {
+        featured: newValue,
+      })
+      toast({
+        title: 'Sucesso',
+        description: 'Veículo atualizado com sucesso',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    } catch (error) {
+      console.error('Error updating document:', error)
+      toast({
+        title: 'Erro',
+        description: 'Falha ao atualizar veículo, Tente novamente mais tarde',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const updateRFeatured = async (vehicleId, newValue) => {
+    const vehicleRef = doc(rentCollection, vehicleId)
     try {
       await updateDoc(vehicleRef, {
         featured: newValue,
@@ -181,7 +209,7 @@ export const useVehicles = () => {
 
   // Update the isRented value
   const updateRentedVehicle = async (vehicleId, newValue) => {
-    const vehicleRef = doc(db, rentCollection, vehicleId)
+    const vehicleRef = doc(rentCollection, vehicleId)
     try {
       await updateDoc(vehicleRef, {
         isRented: newValue,
@@ -339,6 +367,21 @@ export const useVehicles = () => {
     }
   }
 
+  // BETA
+  const getSaleVehiclesRealTime = async () => {
+    const unsubscribe = onSnapshot(saleCollection, (snapshot) => {
+      const updatedVehicles = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setVehicles(updatedVehicles)
+      return updatedVehicles
+    })
+
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe()
+  }
+
   return {
     vehicles,
     uploadProgress,
@@ -348,7 +391,8 @@ export const useVehicles = () => {
     addSaleVehicle,
     updateSaleVehicle,
     updateRentVehicle,
-    updateFeatured,
+    updateSFeatured,
+    updateRFeatured,
     getRentalVehicles,
     getSaleVehicles,
     getFeaturedSaleVehicles,
@@ -359,5 +403,6 @@ export const useVehicles = () => {
     uploadFileFirebase,
     deleteSaleVehicle,
     deleteRentVehicle,
+    getSaleVehiclesRealTime,
   }
 }

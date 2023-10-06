@@ -38,7 +38,8 @@ const initialVehicleData = {
 }
 
 export default function CarrosVenda() {
-  const { getSaleVehicles, uploadProgress, addSaleVehicle, deleteSaleVehicle, updateSaleVehicle } = useVehicles()
+  const { getSaleVehicles, uploadProgress, addSaleVehicle, deleteSaleVehicle, updateSaleVehicle, updateFeatured } =
+    useVehicles()
   const { user } = useAuth()
   const { isOpen: isAddModalOpen, onOpen: onAddModalOpen, onClose: onAddModalClose } = useDisclosure()
   const { isOpen: isEditModalOpen, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
@@ -157,14 +158,21 @@ export default function CarrosVenda() {
       {
         Header: 'Destaque',
         accessor: 'featured',
-        Cell: ({ value }) => {
+        Cell: ({ value, row }) => {
+          const vehicleId = row.original.id
+          const [isFeatured, setIsFeatured] = useState(value)
+          const handleSwitch = async () => {
+            const newValue = !isFeatured
+            setIsFeatured(newValue)
+            await updateFeatured(vehicleId, newValue)
+          }
           return (
             <Switch
               id='featured'
               colorScheme='green'
               defaultChecked={value}
               value={value}
-              // onChange={handleSwitch}
+              onChange={handleSwitch}
             />
           )
         },

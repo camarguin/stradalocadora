@@ -12,6 +12,7 @@ export const CardCar = ({ car, isRent }) => {
   ${car.year ? `Ano: ${car.year}` : ''}
   ${car.km ? `KM: ${car.km}` : ''}
   ${car.price ? `Valor: ${car.price}` : ''}
+  ${car.plate ? `Placa: ${car.plate}` : ''}
   `
 
   return (
@@ -74,7 +75,7 @@ export const CardCar = ({ car, isRent }) => {
             variant='outline'
             marginTop='20px'
             as='a'
-            href={`https://wa.me/553498392344?text=${encodeURI(autoMessage)}`}
+            href={`https://wa.me/553491914359?text=${encodeURI(autoMessage)}`}
             target='_blank'
           >
             Tenho interesse

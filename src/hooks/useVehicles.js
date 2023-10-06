@@ -1,5 +1,16 @@
 import { db, storage } from '@/services/firebase'
-import { collection, doc, getDocs, query, writeBatch, where, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  writeBatch,
+  where,
+  updateDoc,
+  addDoc,
+  deleteDoc,
+  setDoc,
+} from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -99,7 +110,7 @@ export const useVehicles = () => {
     const vehicleRef = doc(db, saleCollection, vehicleId)
     const vehicleDataWithoutId = Object.fromEntries(Object.entries(vehicleData).filter(([key]) => key !== 'id'))
     try {
-      await updateDoc(vehicleRef, vehicleDataWithoutId)
+      await setDoc(vehicleRef, vehicleDataWithoutId)
       toast({
         title: 'Sucesso',
         description: 'Veículo atualizado com sucesso',
@@ -120,7 +131,7 @@ export const useVehicles = () => {
   }
 
   const updateRentVehicle = async (vehicleId, vehicleData) => {
-    const vehicleRef = doc(db, saleCollection, vehicleId)
+    const vehicleRef = doc(db, rentCollection, vehicleId)
     try {
       await updateDoc(vehicleRef, vehicleData)
       toast({

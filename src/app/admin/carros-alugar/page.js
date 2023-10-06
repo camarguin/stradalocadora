@@ -157,7 +157,7 @@ export default function CarrosAlugar() {
           const vehicleId = row.original.id
           const handleDelete = async () => {
             await deleteRentVehicle(vehicleId)
-            updateDeleted(vehicleId)
+            // updateDeleted(vehicleId)
           }
 
           return (

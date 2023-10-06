@@ -45,6 +45,11 @@ export default function CarrosVenda() {
   const { user } = useAuth()
   const { isOpen: isAddModalOpen, onOpen: onAddModalOpen, onClose: onAddModalClose } = useDisclosure()
   const { isOpen: isEditModalOpen, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
+  const {
+    isOpen: isConfirmDeleteModalOpen,
+    onOpen: onConfirmDeleteModalOpen,
+    onClose: onConfirmDeleteModalClose,
+  } = useDisclosure()
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [isFetchLoading, setFetchIsLoading] = useState(true)

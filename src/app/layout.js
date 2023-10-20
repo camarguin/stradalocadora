@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
             {isAdminPath.includes('/admin') ? null : (
               <FloatingWhatsApp
                 avatar='./avatar.jpeg'
-                phoneNumber='5534998392344'
+                phoneNumber='5534991914359'
                 accountName='Strada Locadora'
                 chatMessage='Olá, o que podemos te ajudar?'
                 placeholder='Digite sua mensagem...'

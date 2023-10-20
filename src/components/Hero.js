@@ -2,6 +2,7 @@
 import React from 'react'
 import { Box, Button, Flex, HStack, Heading, Text, useMediaQuery } from '@chakra-ui/react'
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -75,7 +76,7 @@ export const Hero = () => {
           variant='primary'
           marginTop='50px'
         >
-          Explore nossa frota
+          <Link href='/comprar'>Explore nossa frota</Link>
         </Button>
       </Box>
       <Box

@@ -39,7 +39,8 @@ export const useVehicles = () => {
 
   const getRentalVehicles = async () => {
     try {
-      const querySnapshot = await getDocs(rentCollection)
+      const q = query(rentCollection, where('isRented', '==', false))
+      const querySnapshot = await getDocs(q)
       const vehicleData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

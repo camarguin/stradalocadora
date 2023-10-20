@@ -80,7 +80,7 @@ export const Menubar = () => {
               >
                 Whatsapp
               </Heading>
-              <Text>(34) 99839 - 2344 / (34) 99856 - 2344</Text>
+              <Text>(34) 99839 - 2344 / (34) 99191 - 4359</Text>
             </Box>
           </Flex>
           <Button

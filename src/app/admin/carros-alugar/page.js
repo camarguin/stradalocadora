@@ -29,9 +29,10 @@ import { collection, onSnapshot } from 'firebase/firestore'
 const initialVehicleData = {
   name: '',
   featured: false,
-  image: '',
+  isRented: false,
+  images: [],
+  imagePaths: [],
   plate: '',
-  imagePath: '',
 }
 
 export default function CarrosAlugar() {
@@ -51,17 +52,13 @@ export default function CarrosAlugar() {
     setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle.id !== vehicleId))
   }
 
-  // const fetchRentalVehicles = async () => {
-  //   try {
-  //     const rentalVehicles = await getRentalVehicles()
-  //     console.log('Fetched rental vehicles')
-  //     setVehicles(rentalVehicles)
-  //   } catch (error) {
-  //     console.error('Error fetching rental vehicles:', error)
-  //   } finally {
-  //     setFetchIsLoading(false)
-  //   }
-  // }
+  const resetForm = () => {
+    console.log('Resetting form')
+    // Reset the form by setting vehicleData to its initial state
+    setVehicleData(initialVehicleData)
+    // Close the modal
+    onAddModalClose()
+  }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'rent'), (snapshot) => {
@@ -78,16 +75,32 @@ export default function CarrosAlugar() {
 
   const handleAddSubmit = async (e) => {
     e.preventDefault()
+    console.log(vehicleData)
     await addRentalVehicle(vehicleData)
     onAddModalClose()
     setVehicleData(initialVehicleData)
   }
 
+  // const updateVehicleData = (name, value) => {
+  //   setVehicleData((prevData) => ({
+  //     ...prevData,
+  //     [name]: name === 'image' || name === 'imagePath' ? value : value.toUpperCase(),
+  //   }))
+  // }
   const updateVehicleData = (name, value) => {
-    setVehicleData((prevData) => ({
-      ...prevData,
-      [name]: name === 'image' || name === 'imagePath' ? value : value.toUpperCase(),
-    }))
+    setVehicleData((prevData) => {
+      if (name === 'images' || name === 'imagePaths') {
+        return {
+          ...prevData,
+          [name]: [...prevData[name], ...value],
+        }
+      } else {
+        return {
+          ...prevData,
+          [name]: value.toUpperCase(),
+        }
+      }
+    })
   }
 
   const handleEditSubmit = async (e) => {
@@ -187,7 +200,7 @@ export default function CarrosAlugar() {
       <div>
         <Modal
           isOpen={isAddModalOpen}
-          onClose={onAddModalClose}
+          onClose={resetForm}
           size='xl'
         >
           <ModalOverlay />
@@ -203,13 +216,14 @@ export default function CarrosAlugar() {
                 progress={progress}
                 setProgress={setProgress}
                 setIsUploading={setIsUploading}
+                onResetForm={resetForm}
               />
             </ModalBody>
             <ModalFooter>
               <HStack>
                 <Button
                   variant='outline'
-                  onClick={onAddModalClose}
+                  onClick={resetForm}
                 >
                   Cancelar
                 </Button>

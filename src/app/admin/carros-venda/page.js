@@ -30,11 +30,11 @@ const initialVehicleData = {
   color: '',
   featured: false,
   fipe: 0,
-  image: '',
+  images: [],
   km: 0,
   percentage: 0,
   plate: '',
-  imagePath: '',
+  imagePaths: [],
   price: 0,
   year: '',
 }
@@ -60,6 +60,15 @@ export default function CarrosVenda() {
   // const updateDeleted = (vehicleId) => {
   //   setVehicles((prevVehicles) => prevVehicles.filter((vehicle) => vehicle.id !== vehicleId))
   // }
+
+  const resetForm = () => {
+    console.log('Resetting form')
+    // Reset the form by setting vehicleData to its initial state
+    setVehicleData(initialVehicleData)
+    // Close the modal
+    onAddModalClose()
+    onEditModalClose()
+  }
 
   useEffect(() => {
     console.log(vehicles.length)
@@ -97,14 +106,36 @@ export default function CarrosVenda() {
     setVehicleData(initialVehicleData)
   }
 
+  // const updateVehicleData = (name, value) => {
+  //   setVehicleData((prevData) => ({
+  //     ...prevData,
+  //     [name]: name === 'image' || name === 'path' ? value : value.toUpperCase(),
+  //     percentage:
+  //       ((name === 'price' ? parseFloat(value) : vehicleData.price) * 100) /
+  //       (name === 'fipe' ? parseFloat(value) : vehicleData.fipe),
+  //   }))
+  // }
+
   const updateVehicleData = (name, value) => {
-    setVehicleData((prevData) => ({
-      ...prevData,
-      [name]: name === 'image' || name === 'path' ? value : value.toUpperCase(),
-      percentage:
-        ((name === 'price' ? parseFloat(value) : vehicleData.price) * 100) /
-        (name === 'fipe' ? parseFloat(value) : vehicleData.fipe),
-    }))
+    setVehicleData((prevData) => {
+      if (name === 'images' || name === 'imagePaths') {
+        return {
+          ...prevData,
+          [name]: [...prevData[name], value],
+          percentage:
+            ((name === 'price' ? parseFloat(value) : prevData.price) * 100) /
+            (name === 'fipe' ? parseFloat(value) : prevData.fipe),
+        }
+      } else {
+        return {
+          ...prevData,
+          [name]: value.toUpperCase(),
+          percentage:
+            ((name === 'price' ? parseFloat(value) : prevData.price) * 100) /
+            (name === 'fipe' ? parseFloat(value) : prevData.fipe),
+        }
+      }
+    })
   }
 
   const handleEditSubmit = async (e) => {
@@ -251,7 +282,7 @@ export default function CarrosVenda() {
       <div>
         <Modal
           isOpen={isAddModalOpen}
-          onClose={onAddModalClose}
+          onClose={resetForm}
           size='xl'
         >
           <ModalOverlay />
@@ -272,7 +303,7 @@ export default function CarrosVenda() {
               <HStack>
                 <Button
                   variant='outline'
-                  onClick={onAddModalClose}
+                  onClick={resetForm}
                 >
                   Cancelar
                 </Button>
@@ -290,7 +321,7 @@ export default function CarrosVenda() {
         {/* Edit Modal */}
         <Modal
           isOpen={isEditModalOpen}
-          onClose={onEditModalClose}
+          onClose={resetForm}
           size='xl'
         >
           <ModalOverlay />
@@ -311,7 +342,7 @@ export default function CarrosVenda() {
               <HStack>
                 <Button
                   variant='outline'
-                  onClick={onEditModalClose}
+                  onClick={resetForm}
                 >
                   Cancelar
                 </Button>

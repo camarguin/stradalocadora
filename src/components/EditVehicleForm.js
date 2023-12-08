@@ -27,29 +27,72 @@ export const EditVehicleForm = ({
   progress,
   setProgress,
   setIsUploading,
+  onResetForm,
 }) => {
-  const [image, setImage] = useState({ preview: '', raw: '', name: '' })
+  const [images, setImages] = useState([])
   const { uploadFileFirebase } = useVehicles()
   const toast = useToast()
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    if (name === 'imagePath') {
-      updateVehicleData('imagePath', value)
-    } else if (name === 'image') {
-      updateVehicleData('image', value)
+    if (name === 'imagePaths') {
+      updateVehicleData(
+        'imagePaths',
+        Array.from(e.target.files).map((file) => URL.createObjectURL(file))
+      )
+    } else if (name === 'images') {
+      updateVehicleData('images', Array.from(e.target.files))
     } else {
       updateVehicleData(name, value)
     }
   }
 
-  const handleImageUpload = async (file) => {
-    setIsUploading(true)
-    try {
-      const { downloadURL, fullPath } = await uploadFileFirebase(file)
+  const handleKeyDown = (e) => {
+    // Prevent typing "." or ","
+    if (e.key === '.' || e.key === ',') {
+      e.preventDefault()
+    }
+  }
 
-      updateVehicleData('image', downloadURL)
-      updateVehicleData('imagePath', fullPath)
+  // const handleImageUpload = async (file) => {
+  //   setIsUploading(true)
+  //   try {
+  //     const { downloadURL, fullPath } = await uploadFileFirebase(file)
+
+  //     updateVehicleData('image', downloadURL)
+  //     updateVehicleData('imagePath', fullPath)
+  //   } catch (error) {
+  //     toast({
+  //       title: 'Erro',
+  //       description: 'Falha no upload da imagem, tente novamente',
+  //       status: 'error',
+  //       duration: 5000,
+  //       isClosable: true,
+  //     })
+  //   }
+  //   setProgress(100)
+  //   setIsUploading(false)
+  //   toast({
+  //     title: 'Sucesso',
+  //     description: 'Imagem adicionada no banco com sucesso',
+  //     status: 'info',
+  //     duration: 5000,
+  //     isClosable: true,
+  //   })
+  // }
+
+  const handleImageUpload = async (files) => {
+    setIsUploading(true)
+    const newImages = []
+    const newImagePaths = []
+    try {
+      for (const file of files) {
+        const { downloadURL, fullPath } = await uploadFileFirebase(file)
+        newImages.push(downloadURL)
+        newImagePaths.push(fullPath)
+      }
+      updateVehicleData('images', newImages)
+      updateVehicleData('imagePaths', newImagePaths)
     } catch (error) {
       toast({
         title: 'Erro',
@@ -58,6 +101,7 @@ export const EditVehicleForm = ({
         duration: 5000,
         isClosable: true,
       })
+      console.log(error)
     }
     setProgress(100)
     setIsUploading(false)
@@ -70,25 +114,48 @@ export const EditVehicleForm = ({
     })
   }
 
-  const handleImage = (e) => {
+  // const handleImage = (e) => {
+  //   if (e.target.files.length) {
+  //     const selectedImage = {
+  //       preview: URL.createObjectURL(e.target.files[0]),
+  //       raw: e.target.files[0],
+  //       name: e.target.files[0].name,
+  //     }
+  //     setImage(selectedImage)
+  //     handleImageUpload(e.target.files[0])
+  //   }
+  // }
+
+  const handleImages = (e) => {
     if (e.target.files.length) {
-      const selectedImage = {
-        preview: URL.createObjectURL(e.target.files[0]),
-        raw: e.target.files[0],
-        name: e.target.files[0].name,
-      }
-      setImage(selectedImage)
-      handleImageUpload(e.target.files[0])
+      const selectedImages = Array.from(e.target.files).map((file) => ({
+        preview: URL.createObjectURL(file),
+        raw: file,
+        name: file.name,
+      }))
+      setImages(selectedImages)
+      handleImageUpload(selectedImages.map((image) => image.raw))
+      console.log(selectedImages)
     }
+  }
+
+  const resetForm = () => {
+    // Reset form state here
+    setImages([])
+    // Reset other form fields as needed
+  }
+
+  const handleCancel = () => {
+    // Call the resetForm function when the "Cancelar" button is clicked
+    resetForm()
+    // Call the parent callback to handle the form reset
+    onResetForm()
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing={2}>
-        <FormControl
-          id='vehicleName'
-          // isRequired
-        >
+        <FormControl id='vehicleName'>
           <FormLabel>Modelo</FormLabel>
           <Input
             type='text'
@@ -126,10 +193,7 @@ export const EditVehicleForm = ({
         )}
         <HStack>
           {!isRent && (
-            <FormControl
-              id='vehicleKM'
-              // isRequired
-            >
+            <FormControl id='vehicleKM'>
               <FormLabel>KM</FormLabel>
               <Input
                 type='number'
@@ -162,6 +226,7 @@ export const EditVehicleForm = ({
                 <Input
                   type='number'
                   name='fipe'
+                  onKeyDown={handleKeyDown}
                   value={vehicleData.fipe}
                   onChange={handleChange}
                   textTransform='uppercase'
@@ -178,6 +243,7 @@ export const EditVehicleForm = ({
                 <Input
                   type='number'
                   name='price'
+                  onKeyDown={handleKeyDown}
                   value={vehicleData.price}
                   onChange={handleChange}
                   textTransform='uppercase'
@@ -192,59 +258,65 @@ export const EditVehicleForm = ({
             width='max-content'
           >
             Imagem do Veiculo
-            {vehicleData?.image ? (
-              <Box
-                marginTop='10px'
-                borderStyle='dashed'
-                borderWidth='2px'
-                rounded='md'
-                shadow='sm'
-                width='100px'
-                height='100px'
-              >
-                <Image
-                  width={100}
-                  height={100}
-                  src={vehicleData?.image}
-                  alt='Imagem Veiculo'
-                />
-                <Progress
-                  hasStripe
-                  value={progress}
-                />
-              </Box>
-            ) : (
-              <Box
-                marginTop='10px'
-                borderStyle='dashed'
-                borderWidth='2px'
-                rounded='md'
-                shadow='sm'
-                width='100px'
-                height='100px'
-                display='flex'
-                flexDir='column'
-                alignItems='center'
-                justifyContent='center'
-                cursor='pointer'
-              >
-                <Heading textAlign='center'>
-                  <BiImageAdd />
-                </Heading>
-                <Text textAlign='center'>
-                  Adicionar <br />
-                  Foto
-                </Text>
-              </Box>
-            )}
+            <HStack>
+              {images.length > 0 ? (
+                images.map((image, index) => (
+                  <Box
+                    key={index}
+                    marginTop='10px'
+                    borderStyle='dashed'
+                    borderWidth='2px'
+                    rounded='md'
+                    shadow='sm'
+                    width='100px'
+                    height='100px'
+                  >
+                    <Image
+                      width={100}
+                      height={100}
+                      src={image.preview}
+                      alt={`Imagem Veiculo ${index}`}
+                    />
+                    <Progress
+                      hasStripe
+                      value={progress}
+                    />
+                  </Box>
+                ))
+              ) : (
+                <Box
+                  marginTop='10px'
+                  borderStyle='dashed'
+                  borderWidth='2px'
+                  rounded='md'
+                  shadow='sm'
+                  width='100px'
+                  height='100px'
+                  display='flex'
+                  flexDir='column'
+                  alignItems='center'
+                  justifyContent='center'
+                  cursor='pointer'
+                >
+                  <Heading textAlign='center'>
+                    <BiImageAdd />
+                  </Heading>
+                  <Text textAlign='center'>
+                    Adicionar <br />
+                    Fotos
+                  </Text>
+                </Box>
+              )}
+            </HStack>
           </FormLabel>
           <Input
             id='uploadImage'
             variant='ghost'
             display='none'
             type='file'
-            onChange={handleImage}
+            onChange={handleImages}
             accept='image/png, image/jpeg, image/jpg'
+            multiple
           />
         </FormControl>
       </Stack>

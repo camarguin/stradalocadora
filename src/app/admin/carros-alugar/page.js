@@ -1,7 +1,6 @@
 'use client'
 import MyTable from '@/components/MyTable'
 import { db } from '@/services/firebase'
-import { CopyIcon } from '@chakra-ui/icons'
 import {
   Button,
   HStack,
@@ -54,10 +53,9 @@ export default function CarrosAlugar() {
 
   const resetForm = () => {
     console.log('Resetting form')
-    // Reset the form by setting vehicleData to its initial state
     setVehicleData(initialVehicleData)
-    // Close the modal
     onAddModalClose()
+    onEditModalClose()
   }
 
   useEffect(() => {
@@ -81,12 +79,6 @@ export default function CarrosAlugar() {
     setVehicleData(initialVehicleData)
   }
 
-  // const updateVehicleData = (name, value) => {
-  //   setVehicleData((prevData) => ({
-  //     ...prevData,
-  //     [name]: name === 'image' || name === 'imagePath' ? value : value.toUpperCase(),
-  //   }))
-  // }
   const updateVehicleData = (name, value) => {
     setVehicleData((prevData) => {
       if (name === 'images' || name === 'imagePaths') {
@@ -109,10 +101,6 @@ export default function CarrosAlugar() {
     onEditModalClose()
     setVehicleData(initialVehicleData)
   }
-
-  // useEffect(() => {
-  //   fetchRentalVehicles()
-  // }, [])
 
   const columns = useMemo(
     () => [
@@ -216,7 +204,7 @@ export default function CarrosAlugar() {
                 progress={progress}
                 setProgress={setProgress}
                 setIsUploading={setIsUploading}
-                onResetForm={resetForm}
+                // onResetForm={resetForm}
               />
             </ModalBody>
             <ModalFooter>
@@ -263,7 +251,7 @@ export default function CarrosAlugar() {
               <HStack>
                 <Button
                   variant='outline'
-                  onClick={onEditModalClose}
+                  onClick={resetForm}
                 >
                   Cancelar
                 </Button>

@@ -23,7 +23,7 @@ import { collection, onSnapshot } from 'firebase/firestore'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
-import { AiFillCar, AiOutlineDelete, AiOutlineEdit, AiOutlinePlus } from 'react-icons/ai'
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 
 const initialVehicleData = {
   name: '',
@@ -63,28 +63,10 @@ export default function CarrosVenda() {
 
   const resetForm = () => {
     console.log('Resetting form')
-    // Reset the form by setting vehicleData to its initial state
     setVehicleData(initialVehicleData)
-    // Close the modal
     onAddModalClose()
     onEditModalClose()
   }
-
-  useEffect(() => {
-    console.log(vehicles.length)
-  }, [vehicles])
-
-  // const fetchRentalVehicles = async () => {
-  //   try {
-  //     const saleVehicles = await getSaleVehicles()
-  //     console.log('Fetched sale vehicles')
-  //     setVehicles(saleVehicles)
-  //   } catch (error) {
-  //     console.error('Error fetching sale vehicles:', error)
-  //   } finally {
-  //     setFetchIsLoading(false)
-  //   }
-  // }
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'sale'), (snapshot) => {
@@ -101,27 +83,18 @@ export default function CarrosVenda() {
 
   const handleAddSubmit = async (e) => {
     e.preventDefault()
+    console.log(vehicleData)
     await addSaleVehicle(vehicleData)
     onAddModalClose()
     setVehicleData(initialVehicleData)
   }
-
-  // const updateVehicleData = (name, value) => {
-  //   setVehicleData((prevData) => ({
-  //     ...prevData,
-  //     [name]: name === 'image' || name === 'path' ? value : value.toUpperCase(),
-  //     percentage:
-  //       ((name === 'price' ? parseFloat(value) : vehicleData.price) * 100) /
-  //       (name === 'fipe' ? parseFloat(value) : vehicleData.fipe),
-  //   }))
-  // }
 
   const updateVehicleData = (name, value) => {
     setVehicleData((prevData) => {
       if (name === 'images' || name === 'imagePaths') {
         return {
           ...prevData,
-          [name]: [...prevData[name], value],
+          [name]: [...prevData[name], ...value],
           percentage:
             ((name === 'price' ? parseFloat(value) : prevData.price) * 100) /
             (name === 'fipe' ? parseFloat(value) : prevData.fipe),
@@ -144,10 +117,6 @@ export default function CarrosVenda() {
     onEditModalClose()
     setVehicleData(initialVehicleData)
   }
-
-  // useEffect(() => {
-  //   fetchRentalVehicles()
-  // }, [])
 
   const columns = useMemo(
     () => [

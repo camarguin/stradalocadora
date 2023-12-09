@@ -27,6 +27,7 @@ export const AddVehicleForm = ({
   setProgress,
   setIsUploading,
   isRent,
+  onResetForm,
 }) => {
   const [images, setImages] = useState([])
   const { uploadFileFirebase } = useVehicles()
@@ -99,6 +100,12 @@ export const AddVehicleForm = ({
     }
   }
 
+  const resetForm = () => {
+    // Reset form state here
+    setImages([])
+    // Reset other form fields as needed
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing={2}>
@@ -159,7 +166,7 @@ export const AddVehicleForm = ({
               value={vehicleData.plate}
               onChange={handleChange}
               as={InputMask}
-              mask='***-***'
+              mask='***-****'
               textTransform='uppercase'
             />
           </FormControl>

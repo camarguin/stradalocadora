@@ -47,7 +47,6 @@ export const CardsContainer = ({ cars, linkTo }) => {
           <SwiperSlide key={index}>
             <CardCar
               car={car}
-              // isRent={!car.km && !car.fipe}
               isRent={car.isRented !== undefined}
             />
           </SwiperSlide>

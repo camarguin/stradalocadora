@@ -235,11 +235,11 @@ export const useVehicles = () => {
   }
 
   const addSaleVehicle = async (vehicleData) => {
-    if (vehicleData.image === '') {
-      vehicleData.imagePath = 'vehicles/ComingSoon.jpg'
-      vehicleData.image =
-        'https://firebasestorage.googleapis.com/v0/b/stradalocadora-b4917.appspot.com/o/vehicles%2FComingSoon.jpg?alt=media&token=9b7c1cb7-858e-4901-89b3-64968fb5ef82&_gl=1*8r5pa5*_ga*MTAzODQ4NzgyLjE2ODg1MTc2ODA.*_ga_CW55HF8NVT*MTY5NjQ2NTExMi43MC4xLjE2OTY0NjY5ODkuMTIuMC4w '
-    }
+    // if (vehicleData.image === '') {
+    //   vehicleData.imagePath = 'vehicles/ComingSoon.jpg'
+    //   vehicleData.image =
+    //     'https://firebasestorage.googleapis.com/v0/b/stradalocadora-b4917.appspot.com/o/vehicles%2FComingSoon.jpg?alt=media&token=9b7c1cb7-858e-4901-89b3-64968fb5ef82&_gl=1*8r5pa5*_ga*MTAzODQ4NzgyLjE2ODg1MTc2ODA.*_ga_CW55HF8NVT*MTY5NjQ2NTExMi43MC4xLjE2OTY0NjY5ODkuMTIuMC4w '
+    // }
     try {
       const docRef = await addDoc(saleCollection, vehicleData)
       toast({

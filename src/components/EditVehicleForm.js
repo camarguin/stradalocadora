@@ -54,33 +54,6 @@ export const EditVehicleForm = ({
     }
   }
 
-  // const handleImageUpload = async (file) => {
-  //   setIsUploading(true)
-  //   try {
-  //     const { downloadURL, fullPath } = await uploadFileFirebase(file)
-
-  //     updateVehicleData('image', downloadURL)
-  //     updateVehicleData('imagePath', fullPath)
-  //   } catch (error) {
-  //     toast({
-  //       title: 'Erro',
-  //       description: 'Falha no upload da imagem, tente novamente',
-  //       status: 'error',
-  //       duration: 5000,
-  //       isClosable: true,
-  //     })
-  //   }
-  //   setProgress(100)
-  //   setIsUploading(false)
-  //   toast({
-  //     title: 'Sucesso',
-  //     description: 'Imagem adicionada no banco com sucesso',
-  //     status: 'info',
-  //     duration: 5000,
-  //     isClosable: true,
-  //   })
-  // }
-
   const handleImageUpload = async (files) => {
     setIsUploading(true)
     const newImages = []
@@ -114,18 +87,6 @@ export const EditVehicleForm = ({
     })
   }
 
-  // const handleImage = (e) => {
-  //   if (e.target.files.length) {
-  //     const selectedImage = {
-  //       preview: URL.createObjectURL(e.target.files[0]),
-  //       raw: e.target.files[0],
-  //       name: e.target.files[0].name,
-  //     }
-  //     setImage(selectedImage)
-  //     handleImageUpload(e.target.files[0])
-  //   }
-  // }
-
   const handleImages = (e) => {
     if (e.target.files.length) {
       const selectedImages = Array.from(e.target.files).map((file) => ({
@@ -143,13 +104,6 @@ export const EditVehicleForm = ({
     // Reset form state here
     setImages([])
     // Reset other form fields as needed
-  }
-
-  const handleCancel = () => {
-    // Call the resetForm function when the "Cancelar" button is clicked
-    resetForm()
-    // Call the parent callback to handle the form reset
-    onResetForm()
   }
 
   return (
@@ -211,7 +165,7 @@ export const EditVehicleForm = ({
               value={vehicleData.plate}
               onChange={handleChange}
               as={InputMask}
-              mask='***-***'
+              mask='***-****'
               textTransform='uppercase'
             />
           </FormControl>

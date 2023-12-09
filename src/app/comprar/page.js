@@ -10,20 +10,20 @@ export default function Comprar() {
   const [vehicles, setVehicles] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
 
-  const fetchRentalVehicles = async () => {
+  const fetchSaleVehicles = async () => {
     try {
       const saleVehicles = await getSaleVehicles()
       console.log('Successfully fetched sales vehicles')
       setVehicles(saleVehicles)
     } catch (error) {
-      console.error('Error fetching rental vehicles:', error)
+      console.error('Error fetching sales vehicles:', error)
     } finally {
       setIsLoading(false) // Set loading to false when done fetching
     }
   }
 
   useEffect(() => {
-    fetchRentalVehicles()
+    fetchSaleVehicles()
   }, [])
 
   const filteredVehicles = useMemo(

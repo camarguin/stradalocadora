@@ -24,6 +24,7 @@ import { AddVehicleForm } from '@/components/AddVehicleForm'
 import { EditVehicleForm } from '@/components/EditVehicleForm'
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 import { collection, onSnapshot } from 'firebase/firestore'
+import Image from 'next/image'
 
 const initialVehicleData = {
   name: '',
@@ -110,6 +111,20 @@ export default function CarrosAlugar() {
 
   const columns = useMemo(
     () => [
+      {
+        Header: 'Foto',
+        accessor: 'images',
+        Cell: ({ value }) => {
+          return (
+            <Image
+              width={50}
+              height={50}
+              src={value[0] ? value[0] : '/ComingSoon.png'}
+              alt=''
+            />
+          )
+        },
+      },
       {
         Header: 'Veiculo',
         accessor: 'name',

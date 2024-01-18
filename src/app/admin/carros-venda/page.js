@@ -122,13 +122,13 @@ export default function CarrosVenda() {
     () => [
       {
         Header: 'Foto',
-        accessor: 'image',
+        accessor: 'images',
         Cell: ({ value }) => {
           return (
             <Image
               width={50}
               height={50}
-              src={value ? value : '/ComingSoon.png'}
+              src={value[0] ? value[0] : '/ComingSoon.png'}
               alt=''
             />
           )

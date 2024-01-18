@@ -35,8 +35,14 @@ const initialVehicleData = {
 }
 
 export default function CarrosAlugar() {
-  const { getRentalVehicles, updateRentedVehicle, addRentalVehicle, deleteRentVehicle, updateRentVehicle } =
-    useVehicles()
+  const {
+    getRentalVehicles,
+    updateRentedVehicle,
+    addRentalVehicle,
+    deleteRentVehicle,
+    updateRentVehicle,
+    updateRFeatured,
+  } = useVehicles()
   const { user } = useAuth()
   const { isOpen: isAddModalOpen, onOpen: onAddModalOpen, onClose: onAddModalClose } = useDisclosure()
   const { isOpen: isEditModalOpen, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
@@ -127,6 +133,28 @@ export default function CarrosAlugar() {
           return (
             <Switch
               id='stock'
+              colorScheme='green'
+              defaultChecked={value}
+              value={value}
+              onChange={handleSwitch}
+            />
+          )
+        },
+      },
+      {
+        Header: 'Destaque',
+        accessor: 'featured',
+        Cell: ({ value, row }) => {
+          const vehicleId = row.original.id
+          const [isFeatured, setIsFeatured] = useState(value)
+          const handleSwitch = async () => {
+            const newValue = !isFeatured
+            setIsFeatured(newValue)
+            await updateRFeatured(vehicleId, newValue)
+          }
+          return (
+            <Switch
+              id='featured'
               colorScheme='green'
               defaultChecked={value}
               value={value}

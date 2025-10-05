@@ -1,65 +1,86 @@
 'use client'
-import React, { useState } from 'react'
-import { Box, Button, Center, Flex, Input, useMediaQuery } from '@chakra-ui/react'
+import React from 'react'
+import { Box, Button, Center } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination } from 'swiper/modules'
+import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
+import 'swiper/css/navigation'
 import { CardCar } from './CardCar'
 import Link from 'next/link'
 
 export const CardsContainer = ({ cars, linkTo }) => {
-  const [isMobile] = useMediaQuery('(max-width: 400px')
-
   return (
-    <Flex
-      align='center'
-      justify='center'
-      wrap={isMobile ? 'wrap' : 'nowrap'}
+    <Box
+      width='100%'
+      maxWidth='1700px'
+      mx='auto'
     >
-      <Swiper
-        spaceBetween={10}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[Pagination]}
-        className='mySwiper'
-        breakpoints={{
-          // When window width is >= 320px
-          320: {
-            slidesPerView: 1,
-          },
-          // When window width is >= 480px
-          480: {
-            slidesPerView: 2,
-          },
-          // When window width is >= 768px
-          861: {
-            slidesPerView: 3,
-          },
-          // When window width is >= 1024px
-          1440: {
-            slidesPerView: 4,
-          },
-        }}
+      <Box
+        position='relative'
+        pb={12}
       >
-        {cars.map((car, index) => (
-          <SwiperSlide key={index}>
-            <CardCar
-              car={car}
-              isRent={car.isRented !== undefined}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <Center textAlign='center'>
-        <Button
-          margin='10px'
-          variant='outline'
+        <Swiper
+          spaceBetween={16}
+          pagination={{
+            clickable: true,
+            dynamicBullets: true,
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className='mySwiper'
+          style={{
+            paddingBottom: '40px',
+            '--swiper-pagination-color': '#3182ce',
+            '--swiper-navigation-color': '#3182ce',
+          }}
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+              spaceBetween: 16,
+            },
+            640: {
+              slidesPerView: 2,
+              spaceBetween: 16,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 20,
+            },
+            1440: {
+              slidesPerView: 4,
+              spaceBetween: 24,
+            },
+          }}
         >
-          <Link href={linkTo}>Explorar mais</Link>
+          {cars?.map((car, index) => (
+            <SwiperSlide key={car.id || index}>
+              <Box
+                height='100%'
+                display='flex'
+              >
+                {' '}
+                <CardCar
+                  car={car}
+                  isRent={car.isRented !== undefined}
+                />
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </Box>
+
+      <Center mt={6}>
+        <Button
+          variant='outline'
+          colorScheme='blue'
+          size='md'
+          as={Link}
+          href={linkTo}
+        >
+          Explorar mais
         </Button>
       </Center>
-    </Flex>
+    </Box>
   )
 }

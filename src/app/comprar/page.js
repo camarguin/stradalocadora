@@ -1,7 +1,7 @@
 'use client'
 import { CardCar } from '@/components/CardCar'
 import { useVehicles } from '@/hooks/useVehicles'
-import { Flex, Grid, GridItem, Heading, Input, Spinner } from '@chakra-ui/react'
+import { Flex, Grid, GridItem, Heading, Input, Spinner, Box } from '@chakra-ui/react'
 import React, { useEffect, useMemo, useState } from 'react'
 
 export default function Comprar() {
@@ -39,11 +39,12 @@ export default function Comprar() {
 
   return (
     <Flex
-      maxW={'7xl'}
+      maxW={'1200px'} // Reduced from 7xl to match carousel width
       margin='0 auto'
       py={10}
       justify='center'
       direction='column'
+      px={4} // Added padding for mobile
     >
       <Heading
         color='myBlue.200'
@@ -69,16 +70,19 @@ export default function Comprar() {
           templateColumns={{
             xl: 'repeat(4, 1fr)',
             lg: 'repeat(3, 1fr)',
-            md: 'repeat(3, 1fr)',
-            sm: 'repeat(2, 1fr)',
+            md: 'repeat(2, 1fr)', // Changed from 3 to 2
+            sm: 'repeat(1, 1fr)', // Changed from 2 to 1 for mobile
           }}
-          gap={{ lg: 10, md: 8, sm: 2 }}
+          gap={{ xl: 6, lg: 5, md: 4, sm: 3 }} // Consistent spacing
         >
           {filteredVehicles.map((vehicle) => (
-            <CardCar
-              key={vehicle.id}
-              car={vehicle}
-            />
+            <GridItem key={vehicle.id}>
+              <Box maxW="300px" mx="auto"> {/* Constrain card width and center */}
+                <CardCar
+                  car={vehicle}
+                />
+              </Box>
+            </GridItem>
           ))}
         </Grid>
       )}
